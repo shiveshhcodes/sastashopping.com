@@ -1,0 +1,123 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lato:wght@400;700&display=swap');
+
+/* Define CSS Custom Properties (Variables) for colors */
+:root {
+  /* Primary Shades (Deep, Medium, Light Purple) */
+  --primary-100: #7A4EC9;  /* Refined to be a bit richer */
+  --primary-200: #5A3A99;  /* Deeper purple for headers/buttons */
+  --primary-300: #EFE6FA;  /* Very soft tint for sections/backgrounds */
+
+  /* Accent Shades (for highlights, cards, borders) */
+  --accent-100: #D1BFE9;   /* Light lavender tone */
+  --accent-200: #A884D8;   /* Balanced secondary tone */
+
+  /* Text Colors */
+  --text-100: #2C2C2C;     /* Near black for high readability */
+  --text-200: #6D6D6D;     /* Secondary text for labels, etc. */
+
+  /* Backgrounds */
+  --bg-100: #FBFAFD;       /* Soft off-white for main BG */
+  --bg-200: #F5F2FA;       /* Slightly tinted for sections */
+  --bg-300: #FFFFFF;       /* Pure white for cards/containers */
+
+  /* Define standard font families */
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Lato', sans-serif;
+
+  /* Base font settings */
+  font-family: var(--font-body);
+  line-height: 1.6;
+  font-weight: 400;
+  font-size: 16px;
+
+  /* Define base colors - Light mode by default */
+  color-scheme: light;
+  color: var(--text-100);
+  background-color: var(--bg-100);
+
+  /* Improve font rendering */
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Basic reset */
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: var(--bg-100);
+  color: var(--text-100);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box; /* Better box model */
+}
+
+a {
+  font-weight: 500;
+  color: var(--primary-100); /* Use main primary color for links */
+  text-decoration: none; /* Remove underline by default */
+  transition: color 0.2s ease;
+}
+a:hover {
+  color: var(--primary-200); /* Lighter primary on hover */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading); /* Use Poppins for headings */
+  margin-top: 0; /* Remove default top margin */
+  line-height: 1.3; /* Adjust heading line height */
+}
+
+h1 {
+  font-size: 2.5rem; /* Adjust base heading sizes */
+  font-weight: 700; /* Bolder headings */
+}
+/* Add other heading sizes as needed */
+h2 { font-size: 2rem; font-weight: 600;}
+h3 { font-size: 1.75rem; font-weight: 600;}
+
+
+/* General button styling (can be overridden by components) */
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit; /* Inherit body font by default */
+  background-color: var(--bg-300);
+  color: var(--text-100);
+  cursor: pointer;
+  transition: border-color 0.25s, background-color 0.25s, transform 0.1s ease;
+}
+button:hover {
+  transform: translateY(-1px); /* Subtle lift on hover */
+}
+button:focus,
+button:focus-visible {
+  outline: 2px solid var(--primary-200); /* Custom focus outline */
+  outline-offset: 2px;
+}
+
+/* Container utility class */
+.container {
+  width: 100%;
+  max-width: 1200px; /* Consistent max-width */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem; /* Consistent padding */
+  padding-right: 1rem;
+}
+
+/* Placeholder Icon Style (shared) */
+.placeholder-icon {
+  width: 50px;
+  height: 50px;
+  fill: #a0aec0; /* Keep placeholder color */
+}
+

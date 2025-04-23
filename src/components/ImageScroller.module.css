@@ -1,0 +1,56 @@
+/* ImageScroller.module.css */
+
+.scrollerSection {
+    width: 100%;
+    background-color: var(--bg-200); /* Dark background */
+    padding: 2rem 0; /* Increased padding */
+    overflow: hidden;
+  }
+  
+  .scrollerContainer {
+    width: 100%;
+    overflow: hidden;
+    /* Optional: Add mask effect for fading edges */
+    /* -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%); */
+  }
+  
+  .scrollerTrack {
+    display: flex;
+    width: max-content;
+  }
+  
+  .scrollerItem {
+    flex-shrink: 0;
+    width: 280px; /* Slightly larger items */
+    height: 180px;
+    margin-right: 1.75rem; /* Adjust space */
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: var(--bg-300); /* Loading background */
+    box-shadow: 0 2px 4px rgba(0,0,0, 0.2); /* Subtle shadow */
+  }
+  
+  @media (min-width: 768px) {
+    .scrollerItem {
+      width: 350px;
+      height: 220px;
+      margin-right: 2rem;
+    }
+  }
+  
+  
+  .scrollerImage {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease; /* Add transition for potential hover effect */
+  }
+  
+  /* Optional: Add hover effect to images */
+  /* .scrollerItem:hover .scrollerImage {
+    transform: scale(1.05);
+  } */
+  
+  

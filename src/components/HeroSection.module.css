@@ -1,0 +1,121 @@
+/* HeroSection.module.css */
+
+.heroSection {
+    background-color: var(--bg-light); /* White background */
+    color: var(--text-dark); /* Dark text */
+    padding: 5rem 0; /* Increased vertical padding */
+    text-align: center;
+  }
+  
+  @media (min-width: 768px) {
+    .heroSection {
+      padding: 7rem 0; /* Further increase padding */
+    }
+  }
+  
+  .heroContainer {
+    /* Uses global .container */
+  }
+  
+  .heading {
+    font-family: var(--font-heading); /* Use Poppins */
+    font-size: 2.8rem; /* Adjust size */
+    font-weight: 700; /* Bold */
+    margin-bottom: 1.25rem; /* Adjust spacing */
+    line-height: 1.25;
+    color: var(--text-dark);
+  }
+  
+  /* Responsive heading size */
+  @media (min-width: 768px) {
+    .heading {
+      font-size: 3.5rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .heading {
+      font-size: 4rem; /* Match screenshot size better */
+    }
+  }
+  
+  .subheading {
+    font-family: var(--font-body); /* Use Lato */
+    font-size: 1.1rem; /* Adjust size */
+    color: var(--text-medium); /* Medium gray text */
+    max-width: 650px; /* Adjust width */
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2.5rem; /* Increase spacing */
+    line-height: 1.7; /* Improve readability */
+  }
+  
+  @media (min-width: 768px) {
+    .subheading {
+      font-size: 1.2rem;
+    }
+  }
+  
+  .buttonGroup {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  @media (min-width: 640px) {
+    .buttonGroup {
+      flex-direction: row;
+      gap: 1.25rem; /* Slightly increase gap */
+    }
+  }
+  
+  .button {
+    padding: 0.8rem 2.2rem; /* Adjust padding for better proportions */
+    font-size: 1rem;
+    font-weight: 600; /* Medium bold */
+    font-family: var(--font-body); /* Use Lato for buttons */
+    border-radius: 6px;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+    width: 100%;
+    max-width: 220px; /* Adjust max width */
+    text-align: center; /* Ensure text is centered */
+  }
+  
+  @media (min-width: 640px) {
+    .button {
+      width: auto; /* Auto width on larger screens */
+    }
+  }
+  
+  .button:hover {
+      transform: translateY(-2px); /* Slightly more lift */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow on hover */
+  }
+  
+  .primaryButton {
+    background-color: var(--bg-100); /* Black background */
+    color: var(--text-100); /* White text */
+    border-color: var(--bg-100);
+  }
+  
+  .primaryButton:hover {
+    background-color: var(--bg-300); /* Dark gray hover */
+    border-color: var(--bg-300);
+  }
+  
+  .secondaryButton {
+    background-color: transparent;
+    color: var(--text-medium); /* Medium gray text */
+    border-color: var(--border-medium); /* Medium gray border */
+  }
+  
+  .secondaryButton:hover {
+    background-color: var(--bg-off-white); /* Light background */
+    border-color: var(--text-medium); /* Darker border */
+    color: var(--text-dark); /* Darker text */
+  }
+  
+  
