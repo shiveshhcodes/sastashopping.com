@@ -8,7 +8,7 @@ function FeatureVideoSection() {
       <div className="feature-content">
         {/* Left Column */}
         <div className="feature-text">
-          <h2 className="feature-title">Find the Best Prices Instantly</h2>
+          <h2 className="feature-title"></h2>
         </div>
 
         {/* Right Column */}

@@ -4,49 +4,34 @@
 
 /* Style for the small colored square icon placeholder */
 .feature-square-icon {
-    width: 15px; /* Set a small fixed size */
-    height: 15px; /* Set a small fixed size */
-    /* background-color is set via Bootstrap bg-primary class in JSX */
-    /* border-radius is set via Bootstrap rounded class in JSX */
-    flex-shrink: 0; /* Prevent the placeholder from shrinking */
-    display: inline-block; /* Ensure it behaves like a block element in flex */
-    margin-top: 5px; /* Adjust vertical alignment with text */
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  display: inline-block;
+  margin-top: 5px;
 }
-
 
 /* Style for the video placeholder container */
 .video-placeholder-container {
-    /* Set a background color similar to the screenshot */
-    background-color: #a0a0a0; /* Grey color */
-    /* Set a height - adjust as needed, or make it responsive */
-    height: 400px; /* Example height - adjust to match screenshot proportion */
-    /* Add rounded corners and shadow */
-    border-radius: 0.375rem; /* Bootstrap's default rounded class value */
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* Bootstrap's default shadow value */
-    /* Flexbox properties to center the content (the PlayCircle icon) */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* Ensure it takes full width relative to its container */
-    width: 100%;
-    /* Optional: Add max-width if you don't want it to stretch too wide on large screens */
-    /* max-width: 900px; */
-    /* margin: 0 auto; */ /* Center the block if max-width is used */
+  background-color: #a0a0a0;
+  height: 400px;
+  border-radius: 0.375rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
-/* Style for the PlayCircle icon within the placeholder */
 .video-placeholder-container .lucide-play-circle {
-    /* You can add hover effects or other styles here */
-    cursor: pointer; /* Indicate it's clickable (even if it doesn't do anything yet) */
-    opacity: 0.8; /* Slightly transparent */
-    transition: opacity 0.3s ease; /* Smooth transition */
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
 }
 
 .video-placeholder-container .lucide-play-circle:hover {
-    opacity: 1; /* Fully opaque on hover */
+  opacity: 1;
 }
-
-/* Add any additional custom styles here if needed */
 
 .feature-section {
   max-width: 1200px;
@@ -65,16 +50,8 @@
   padding-right: 2rem;
 }
 
-.feature-title {
-  font-size: 3.5rem;
-  font-weight: 700;
-  line-height: 1.2;
-  color: var(--primary-100);
-  margin: 0;
-}
-
 .feature-description {
-  font-size: 1.125rem;
+  font-size: 1.275rem;
   line-height: 1.6;
   color: #4a5568;
   margin-bottom: 2rem;
@@ -115,7 +92,7 @@
   margin: 0;
 }
 
-/* New Button Styles */
+/* Button Styles */
 .feature-buttons {
   display: flex;
 }
@@ -211,10 +188,6 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .feature-title {
-    font-size: 3rem;
-  }
-  
   .btn-start-now {
     padding: 0.875rem 1.75rem;
   }
@@ -230,22 +203,18 @@
     padding-right: 0;
   }
 
-  .feature-title {
-    font-size: 2.5rem;
-  }
-
   .video-placeholder {
     height: 400px;
   }
-  
+
   .btn-start-now {
     max-width: 100%;
   }
-  
+
   .button-main-text {
     font-size: 1rem;
   }
-  
+
   .button-sub-text {
     font-size: 0.8125rem;
   }
