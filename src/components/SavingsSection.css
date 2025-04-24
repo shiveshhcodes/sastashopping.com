@@ -1,0 +1,170 @@
+/* SavingsSection.css */
+/* Using BEM naming convention to prevent style conflicts */
+
+/* Custom styles for the Savings Section */
+
+/* Style for the container holding the image/icon placeholder in feature boxes */
+.feature-box-image-placeholder {
+    /* Set a size for the placeholder area */
+    width: 80px; /* Example size - adjust as needed */
+    height: 80px; /* Example size - adjust as needed */
+    margin-left: auto; /* Center the block element */
+    margin-right: auto; /* Center the block element */
+    background-color: #e9ecef; /* Light grey background */
+    border-radius: 8px; /* Slightly rounded corners */
+    display: flex; /* Use flex to center content inside */
+    justify-content: center;
+    align-items: center;
+    /* Add a border or shadow if desired */
+    /* border: 1px solid #ccc; */
+}
+
+/* Style for a simple square placeholder inside the image placeholder */
+.placeholder-square {
+    width: 40px; /* Size of the inner square */
+    height: 40px; /* Size of the inner square */
+    background-color: #adb5bd; /* Medium grey color */
+    /* Add rounded corners if needed */
+    /* border-radius: 4px; */
+}
+
+
+/* Style for the video placeholder box */
+.video-placeholder-box {
+    /* Set a background color similar to the screenshot */
+    background-color: #a0a0a0; /* Grey color */
+    /* Set a height - adjust as needed, or make it responsive */
+    height: 400px; /* Example height - adjust to match screenshot proportion */
+    /* Add rounded corners and shadow */
+    border-radius: 0.375rem; /* Bootstrap's default rounded class value */
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* Bootstrap's default shadow value */
+    /* Ensure it takes full width relative to its container */
+    width: 100%;
+    /* Optional: Add max-width if you don't want it to stretch too wide on large screens */
+    /* max-width: 900px; */
+    /* margin: 0 auto; */ /* Center the block if max-width is used */
+
+    /* This is an empty box, no content inside */
+}
+
+.savings {
+    padding: 80px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.savings__container {
+    width: 100%;
+}
+
+.savings__header {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 80px;
+}
+
+.savings__title {
+    font-size: 48px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 24px;
+}
+
+.savings__description {
+    font-size: 20px;
+    line-height: 1.5;
+    color: #666;
+    margin: 0;
+}
+
+.savings__features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    padding: 0 20px;
+}
+
+.savings__feature-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.savings__feature-image {
+    width: 100%;
+    margin-bottom: 24px;
+    background: #f5f5f5;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.savings__placeholder-image {
+    width: 100%;
+    padding-top: 66.67%; /* 3:2 aspect ratio */
+    background-color: #f0f0f0;
+    border-radius: 8px;
+}
+
+.savings__feature-content {
+    text-align: left;
+    width: 100%;
+}
+
+.savings__feature-title {
+    font-size: 19.3px;
+    font-weight: 600;
+    color: #7E22CE;
+    margin: 0 0 12px 0;
+    line-height: 1.2;
+    min-height: 40px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.savings__feature-text {
+    font-size: 17px;
+    line-height: 1.4;
+    color: #666;
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .savings__features-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
+    }
+    
+    .savings__feature-title {
+        min-height: auto;
+    }
+}
+
+@media (max-width: 640px) {
+    .savings {
+        padding: 60px 20px;
+    }
+
+    .savings__header {
+        margin-bottom: 60px;
+    }
+
+    .savings__title {
+        font-size: 36px;
+    }
+
+    .savings__features-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 0;
+    }
+
+    .savings__feature-title {
+        font-size: 20px;
+        min-height: auto;
+    }
+}
+
+/* Add any additional custom styles here if needed */
+

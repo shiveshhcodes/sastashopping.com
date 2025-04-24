@@ -3,7 +3,8 @@ import Navbar from '../components/Navbar'; // Import the Navbar component
 import HeroSection from '../components/HeroSection'; // Import the HeroSection component
 import ImageGrid from '../components/ImageGrid'; // Import the ImageGrid component
 import ImageScroller from '../components/ImageScroller'; // Import the ImageScroller component
-import FeatureVideoSection from '../components/FeatureVideoSection'; // *** IMPORT THE NEW COMPONENT HERE ***
+import FeatureVideoSection from '../components/FeatureVideoSection'; // Import the FeatureVideoSection component
+import SavingsSection from '../components/SavingsSection'; // Import the new section
 
 // Updated placeholder image URLs (keep these)
 const placeholderGridImages = [
@@ -44,6 +45,7 @@ function LandingPage() {
         {/* === Add the Feature and Video Section Component Here === */}
         {/* Ensure this is placed where you want the section to appear */}
         <FeatureVideoSection />
+        <SavingsSection />
         {/* ====================================================== */}
 
         {/* Image Grid Section */}
