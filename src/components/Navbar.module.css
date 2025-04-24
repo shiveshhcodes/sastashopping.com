@@ -61,7 +61,19 @@
 }
 
 .dropdownToggle {
- /* Inherits .navLink styles */
+  background: none;
+  border: none;
+  color: var(--text-100);
+  font-weight: 500;
+  padding: 0.5rem 0.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease-in-out;
+}
+
+.dropdownToggle:hover {
+  color: var(--primary-100);
 }
 
 .chevron {
@@ -77,18 +89,18 @@
 .dropdownMenu {
   position: absolute;
   left: 0;
-  top: calc(100% + 0.5rem); /* Position below with gap */
-  background-color: var(--bg-light); /* White background */
+  top: calc(100% + 0.5rem);
+  background-color: var(--bg-300);
   border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Softer shadow */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 0.5rem 0;
   min-width: 180px;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-5px); /* Start slightly above */
+  transform: translateY(-5px);
   transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
   z-index: 60;
-  border: 1px solid var(--border-light); /* Subtle border */
+  border: 1px solid var(--accent-100);
 }
 
 .dropdownMenuOpen {
@@ -99,46 +111,76 @@
 
 .dropdownItem {
   display: block;
-  padding: 0.6rem 1.2rem; /* Slightly more padding */
-  color: var(--text-dark); /* Dark text */
+  padding: 0.5rem 1rem;
+  color: var(--text-100);
   text-decoration: none;
-  font-size: 0.9rem;
-  white-space: nowrap;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .dropdownItem:hover {
-  background-color: var(--bg-off-white); /* Off-white hover */
-  color: var(--text-dark);
+  background-color: var(--accent-100);
+  color: var(--primary-100);
 }
 
 /* Search Button */
 .searchButton {
-  background-color: var(--bg-100); /* Black background */
-  color: var(--text-100); /* White text */
+  background-color: var(--primary-100);
+  color: var(--bg-300);
   font-weight: 600;
-  font-family: var(--font-body); /* Ensure correct font */
-  padding: 0.5rem 1.25rem;
+  font-family: var(--font-body);
+  padding: 0.5rem 1.5rem;
   border-radius: 6px;
-  border: 1px solid var(--bg-100); /* Matching border */
-  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+  border: none;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 140px;
+  justify-content: center;
 }
 
 .searchButton:hover {
-  background-color: var(--bg-300); /* Dark gray hover */
-  border-color: var(--bg-300);
-  transform: translateY(-1px); /* Subtle lift */
+  background-color: var(--primary-200);
+  transform: translateY(-1px);
+}
+
+.searchIcon {
+  color: var(--bg-300);
 }
 
 .desktopSearch {
   display: none;
 }
+
 @media (min-width: 768px) {
   .desktopSearch {
     display: block;
   }
+  
+  .searchButton {
+    min-width: 160px;
+  }
 }
 
+.mobileSearchButton {
+  width: 100%;
+  margin-top: 1rem;
+  text-align: center;
+  background-color: var(--primary-100);
+  border: none;
+  color: var(--bg-300);
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.mobileSearchButton:hover {
+  background-color: var(--primary-200);
+}
 
 /* Mobile Menu Styles */
 .mobileMenuButton {
@@ -193,18 +235,5 @@
 
 .mobileNavLink:hover {
   background-color: var(--bg-off-white);
-}
-
-.mobileSearchButton {
-    width: 100%;
-    margin-top: 1rem;
-    text-align: center;
-    background-color: var(--bg-100); /* Black background */
-    border-color: var(--bg-100);
-    color: var(--text-100); /* White text */
-}
-.mobileSearchButton:hover {
-    background-color: var(--bg-300); /* Dark gray hover */
-    border-color: var(--bg-300);
 }
 
