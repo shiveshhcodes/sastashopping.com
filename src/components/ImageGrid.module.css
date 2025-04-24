@@ -3,6 +3,8 @@
 .gridSection {
   padding: 4rem 0; /* Adjust padding */
   background-color: var(--bg-off-white); /* Use off-white background */
+  overflow: hidden;
+  position: relative;
 }
 
 @media (min-width: 768px) {
@@ -53,12 +55,14 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Add shadow on hover */
 }
 
-
 .gridImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
 }
 
 /* Ensure placeholder icon is centered and styled */
@@ -69,4 +73,88 @@
   max-height: 60px;
   fill: #a0aec0; /* Gray color */
   opacity: 0.8; /* Slightly transparent */
+}
+
+.scrollContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 2rem 0;
+}
+
+.scrollTrack {
+  display: flex;
+  gap: 1.5rem;
+  min-width: 100%;
+  will-change: transform;
+}
+
+/* First track animation */
+.scrollTrack:nth-child(1) {
+  animation: scroll 40s linear infinite;
+  animation-delay: -20s;
+}
+
+/* Second track animation */
+.scrollTrack:nth-child(2) {
+  animation: scroll 40s linear infinite reverse;
+  animation-delay: -30s;
+}
+
+.scrollItem {
+  flex: 0 0 280px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 180px;
+  filter: grayscale(20%);
+  transform-origin: center center;
+  will-change: transform, filter;
+}
+
+.scrollItem:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  filter: grayscale(0%);
+  z-index: 1;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% - 1.5rem));
+  }
+}
+
+/* Remove the gradient overlays as they're not needed for this style */
+.scrollContainer::before,
+.scrollContainer::after {
+  display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .scrollItem {
+    flex: 0 0 220px;
+    height: 140px;
+  }
+  
+  .scrollContainer {
+    gap: 1rem;
+  }
+  
+  .scrollTrack {
+    gap: 1rem;
+  }
+  
+  .scrollTrack:nth-child(1),
+  .scrollTrack:nth-child(2) {
+    animation-duration: 30s;
+  }
 }

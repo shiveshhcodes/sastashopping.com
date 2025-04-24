@@ -1,0 +1,337 @@
+/* BottomSection.css */
+
+/* Custom styles for the Bottom Section (CTA and Footer) */
+
+/* You can add custom styles here if needed, but Bootstrap classes
+   should handle most of the layout and basic appearance based on
+   the screenshot. */
+
+/* Example: Style for the logo placeholder if it's just text */
+.footer-logo strong {
+    font-size: 1.5rem; /* Adjust size as needed */
+    color: #333; /* Example color */
+}
+
+/* Style for the footer links to remove default hover underline if not desired */
+.list-unstyled a:hover {
+    text-decoration: underline !important; /* Add underline on hover, !important to override Bootstrap utilities */
+}
+
+.list-inline a:hover {
+     text-decoration: underline !important; /* Add underline on hover for inline links */
+}
+
+/* Adjust vertical spacing for social icons if needed */
+.list-unstyled .d-flex.align-items-center {
+    /* margin-bottom: 0.5rem; /* Example adjustment */
+}
+
+/* Fine-tune form control appearance if needed */
+.bottom-section .form-control {
+    /* Add custom border, padding, etc. */
+}
+
+/* Fine-tune button appearance if needed */
+.bottom-section .btn {
+    /* Add custom padding, border-radius, etc. */
+}
+
+.bottom-section {
+  background: linear-gradient(to bottom, #ffffff, #f8f5ff);
+  padding: 80px 0 0;
+}
+
+/* CTA Section styles */
+.bottom-section .display-4 {
+  font-size: 3.5rem;
+  line-height: 1.2;
+  margin-bottom: 0;
+  background: linear-gradient(135deg, #6B46C1, #9F7AEA);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.bottom-section .lead {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: #4A5568;
+}
+
+/* Updated button styles */
+.bottom-section .btn {
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-size: 1.125rem;
+  letter-spacing: 0.5px;
+}
+
+.bottom-section .btn-dark {
+  background: linear-gradient(135deg, #6B46C1, #9F7AEA);
+  border: none;
+  padding: 1.25rem 3rem;
+  box-shadow: 0 4px 15px rgba(107, 70, 193, 0.2);
+}
+
+.bottom-section .btn-dark:hover {
+  background: linear-gradient(135deg, #553C9A, #805AD5);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(107, 70, 193, 0.3);
+}
+
+/* Footer styles */
+.bottom-section footer {
+  font-size: 0.9375rem;
+  padding-top: 80px;
+  background: linear-gradient(to bottom, transparent, #f8f5ff);
+}
+
+.bottom-section h5 {
+  font-size: 1.125rem;
+  color: #553C9A;
+  font-weight: 600;
+}
+
+.bottom-section .form-control {
+  padding: 0.75rem 1rem;
+  border: 1px solid #E9D8FD;
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+.bottom-section .form-control:focus {
+  box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.1);
+  border-color: #9F7AEA;
+}
+
+/* Newsletter section button */
+.bottom-section .mb-3 .btn-dark {
+  padding: 0.75rem 1.5rem;
+  background: #6B46C1;
+}
+
+.bottom-section .mb-3 .btn-dark:hover {
+  background: #553C9A;
+  transform: translateY(-1px);
+}
+
+/* Social media links */
+.bottom-section .list-unstyled a {
+  transition: all 0.2s ease;
+  color: #4A5568;
+}
+
+.bottom-section .list-unstyled a:hover {
+  color: #6B46C1 !important;
+  transform: translateX(4px);
+}
+
+.bottom-section .list-unstyled a svg {
+  transition: all 0.2s ease;
+}
+
+.bottom-section .list-unstyled a:hover svg {
+  color: #6B46C1;
+}
+
+/* Footer bottom links */
+.bottom-section .list-inline-item:not(:last-child) {
+  margin-right: 2rem;
+}
+
+.bottom-section .list-inline a {
+  color: #4A5568;
+  transition: all 0.2s ease;
+}
+
+.bottom-section .list-inline a:hover {
+  color: #6B46C1 !important;
+}
+
+/* Newsletter section */
+.bottom-section .mb-4 h3 {
+  font-weight: 700;
+  background: linear-gradient(135deg, #6B46C1, #9F7AEA);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.bottom-section small.text-muted {
+  font-size: 0.8125rem;
+  margin-top: 0.5rem;
+  display: block;
+  color: #718096 !important;
+}
+
+/* Border styles */
+.bottom-section .border-top {
+  border-color: #E9D8FD !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+  .bottom-section {
+    padding: 40px 0 0;
+  }
+
+  .bottom-section .display-4 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .bottom-section footer {
+    padding-top: 40px;
+  }
+
+  .bottom-section .list-inline {
+    text-align: left;
+    margin-top: 1rem;
+  }
+  
+  .bottom-section .list-inline-item:not(:last-child) {
+    margin-right: 1rem;
+  }
+
+  .bottom-section .btn-dark {
+    width: 100%;
+    justify-content: center;
+    padding: 1rem 2rem;
+  }
+}
+
+/* Subscription form styles */
+.subscription-form {
+  position: relative;
+}
+
+.subscription-message {
+  min-height: 24px;
+  margin-top: 0.5rem;
+}
+
+/* Form validation styles */
+.bottom-section .form-control.is-invalid {
+  border-color: #FC8181;
+  background-image: none;
+}
+
+.bottom-section .form-control.is-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(252, 129, 129, 0.1);
+  border-color: #FC8181;
+}
+
+.error-message {
+  color: #E53E3E !important;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+/* Loading button styles */
+.bottom-section .btn.loading {
+  position: relative;
+  color: transparent;
+  pointer-events: none;
+  min-width: 100px;
+}
+
+.bottom-section .btn.loading .loader-icon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  animation: spin 1s linear infinite;
+}
+
+/* Success button styles */
+.bottom-section .btn.success {
+  background: #48BB78 !important;
+  color: transparent;
+  min-width: 100px;
+}
+
+.success-content {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: white;
+}
+
+.bottom-section .btn.success .success-icon {
+  animation: popIn 0.3s ease-out;
+}
+
+.success-emoji {
+  font-size: 1.2em;
+  animation: popInWithRotate 0.5s ease-out;
+}
+
+/* Success message styles */
+.success-message {
+  color: #48BB78 !important;
+  animation: fadeInUp 0.3s ease-out;
+  display: flex;
+  align-items: center;
+}
+
+/* Animations */
+@keyframes spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0);
+  }
+  70% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes popInWithRotate {
+  0% {
+    transform: scale(0) rotate(-180deg);
+  }
+  70% {
+    transform: scale(1.2) rotate(10deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Disabled state styles */
+.bottom-section .form-control:disabled {
+  background-color: #F7FAFC;
+  cursor: not-allowed;
+}
+
+.bottom-section .btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
