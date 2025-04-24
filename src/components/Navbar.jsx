@@ -8,25 +8,49 @@ function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   // State for dropdown visibility
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // State for search input expansion
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+  // State for search query
+  const [searchQuery, setSearchQuery] = useState('');
   // Ref for the dropdown to detect outside clicks
   const dropdownRef = useRef(null);
+  // Ref for the search container to detect outside clicks
+  const searchRef = useRef(null);
+  // Ref for the search input to focus it when expanded
+  const searchInputRef = useRef(null);
+
 
   // Toggle mobile menu
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
     setIsDropdownOpen(false); // Close dropdown when opening/closing mobile menu
+    setIsSearchExpanded(false); // Close search when opening/closing mobile menu
   };
 
   // Toggle dropdown menu
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+    setIsSearchExpanded(false); // Close search when opening dropdown
   };
 
-  // Close dropdown if clicked outside
+  // Toggle search expansion
+  const toggleSearch = () => {
+    setIsSearchExpanded(!isSearchExpanded);
+  };
+
+  // Close dropdown or search if clicked outside
   useEffect(() => {
     function handleClickOutside(event) {
+      // Close dropdown if click is outside dropdown ref
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
+      }
+      // Close search if click is outside search ref AND search is expanded
+      if (searchRef.current && !searchRef.current.contains(event.target) && isSearchExpanded) {
+         // Only collapse if the search input is empty
+         if (!searchQuery) {
+            setIsSearchExpanded(false);
+         }
       }
     }
     // Bind the event listener
@@ -35,7 +59,14 @@ function Navbar() {
       // Unbind the event listener on clean up
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dropdownRef]);
+  }, [dropdownRef, searchRef, isSearchExpanded, searchQuery]); // Add dependencies
+
+  // Focus search input when it expands
+  useEffect(() => {
+    if (isSearchExpanded && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [isSearchExpanded]);
 
 
   return (
@@ -58,7 +89,7 @@ function Navbar() {
               <ChevronDown className={`${styles.chevron} ${isDropdownOpen ? styles.chevronOpen : ''}`} />
             </button>
             {isDropdownOpen && (
-              <div className={`${styles.dropdownMenu} ${isDropdownOpen ? styles.dropdownMenuOpen : ''}`}>
+              <div className={`${styles.dropdownMenu} ${isDropdownMenuOpen ? styles.dropdownMenuOpen : ''}`}>
                 <a href="/electronics" className={styles.dropdownItem}>Electronics</a>
                 <a href="/clothing" className={styles.dropdownItem}>Clothing</a>
                 <a href="/home" className={styles.dropdownItem}>Home & Kitchen</a>
@@ -67,14 +98,30 @@ function Navbar() {
           </div>
           <a href="/about" className={styles.navLink}>About</a>
           <a href="/contact" className={styles.navLink}>Contact</a>
-        </div>
 
-        {/* Search Button (Desktop) */}
-        <div className={styles.desktopSearch}>
-          <button className={styles.searchButton}>
-            <Search size={18} className={styles.searchIcon} />
-            Search
-          </button>
+          {/* Search Container (Desktop) - Moved inside desktopNav */}
+          <div
+            className={`${styles.searchContainer} ${isSearchExpanded ? styles.searchExpanded : ''}`}
+            ref={searchRef}
+            // Removed hover events, expansion is now click-based
+          >
+            <input
+              type="text"
+              placeholder="Search products..."
+              className={styles.searchInput}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              ref={searchInputRef} // Attach ref to input
+              // Prevent click on input from collapsing the search container
+              onClick={(e) => e.stopPropagation()}
+            />
+            {/* Button to toggle search expansion */}
+            <button className={styles.searchButton} onClick={toggleSearch}>
+              <Search size={18} className={styles.searchIcon} />
+              {/* Text is only visible when not expanded */}
+              {!isSearchExpanded && <span className={styles.searchText}>Search</span>}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu Button */}
@@ -93,10 +140,18 @@ function Navbar() {
           <a href="/home" className={styles.mobileNavLink}>Home & Kitchen</a>
           <a href="/about" className={styles.mobileNavLink}>About</a>
           <a href="/contact" className={styles.mobileNavLink}>Contact</a>
-          <button className={`${styles.searchButton} ${styles.mobileSearchButton}`}>
-            <Search size={18} className={styles.searchIcon} />
-            Search
-          </button>
+          <div className={styles.mobileSearchContainer}>
+            <input
+              type="text"
+              placeholder="Search products..."
+              className={styles.mobileSearchInput}
+            />
+            {/* Mobile search button - kept for mobile layout */}
+            <button className={`${styles.searchButton} ${styles.mobileSearchButton}`}>
+              <Search size={18} className={styles.searchIcon} />
+              Search
+            </button>
+          </div>
         </div>
       </div>
     </nav>
