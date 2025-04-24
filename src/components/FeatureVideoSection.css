@@ -91,7 +91,7 @@
 .feature-boxes {
   display: grid;
   gap: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .feature-box {
@@ -122,42 +122,66 @@
   margin: 0;
 }
 
+/* New Button Styles */
 .feature-buttons {
   display: flex;
-  gap: 1rem;
 }
 
-.btn-learn, .btn-signup {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  border-radius: 8px;
+.btn-start-now {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-learn {
-  background: white;
-  color: var(--primary-100);
-  border: 2px solid var(--primary-100);
-}
-
-.btn-signup {
-  background: var(--primary-100);
+  gap: 1.25rem;
+  background: linear-gradient(135deg, #8a5cf6 0%, #6d28d9 100%);
   color: white;
   border: none;
+  padding: 1.25rem 2.25rem;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-body);
+  box-shadow: 0 4px 20px rgba(109, 40, 217, 0.2);
+  width: 100%;
+  max-width: 400px;
 }
 
-.btn-learn:hover {
-  background: var(--primary-100);
+.btn-start-now:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(109, 40, 217, 0.25);
+  background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
+}
+
+.start-icon {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 10px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  font-size: 28px;
   color: white;
 }
 
-.btn-signup:hover {
-  background: var(--primary-200);
+.btn-start-now:hover .start-icon {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.button-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+.button-main-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: white;
+}
+
+.button-sub-text {
+  font-size: 0.9375rem;
+  opacity: 0.9;
+  color: white;
 }
 
 .video-container {
@@ -197,6 +221,10 @@
   .feature-title {
     font-size: 3rem;
   }
+  
+  .btn-start-now {
+    padding: 0.875rem 1.75rem;
+  }
 }
 
 @media (max-width: 768px) {
@@ -215,5 +243,17 @@
 
   .video-placeholder {
     height: 400px;
+  }
+  
+  .btn-start-now {
+    max-width: 100%;
+  }
+  
+  .button-main-text {
+    font-size: 1rem;
+  }
+  
+  .button-sub-text {
+    font-size: 0.8125rem;
   }
 }

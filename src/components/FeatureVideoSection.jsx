@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlayCircle, Package, History } from 'lucide-react';
+import { PlayCircle, Package, History, MousePointerClick } from 'lucide-react';
 import './FeatureVideoSection.css';
 
 function FeatureVideoSection() {
@@ -37,9 +37,12 @@ function FeatureVideoSection() {
           </div>
 
           <div className="feature-buttons">
-            <button className="btn-learn">Learn More</button>
-            <button className="btn-signup">
-              Sign Up <PlayCircle size={20} />
+            <button className="btn-start-now">
+              <MousePointerClick className="start-icon" size={24} />
+              <span className="button-text">
+                <span className="button-main-text">Start Comparing Prices</span>
+                <span className="button-sub-text">Find the best deals instantly →</span>
+              </span>
             </button>
           </div>
         </div>
