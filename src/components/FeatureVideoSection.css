@@ -1,0 +1,219 @@
+/* FeatureVideoSection.css */
+
+/* Custom styles for the Feature/Video Section */
+
+/* Style for the small colored square icon placeholder */
+.feature-square-icon {
+    width: 15px; /* Set a small fixed size */
+    height: 15px; /* Set a small fixed size */
+    /* background-color is set via Bootstrap bg-primary class in JSX */
+    /* border-radius is set via Bootstrap rounded class in JSX */
+    flex-shrink: 0; /* Prevent the placeholder from shrinking */
+    display: inline-block; /* Ensure it behaves like a block element in flex */
+    margin-top: 5px; /* Adjust vertical alignment with text */
+}
+
+
+/* Style for the video placeholder container */
+.video-placeholder-container {
+    /* Set a background color similar to the screenshot */
+    background-color: #a0a0a0; /* Grey color */
+    /* Set a height - adjust as needed, or make it responsive */
+    height: 400px; /* Example height - adjust to match screenshot proportion */
+    /* Add rounded corners and shadow */
+    border-radius: 0.375rem; /* Bootstrap's default rounded class value */
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* Bootstrap's default shadow value */
+    /* Flexbox properties to center the content (the PlayCircle icon) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Ensure it takes full width relative to its container */
+    width: 100%;
+    /* Optional: Add max-width if you don't want it to stretch too wide on large screens */
+    /* max-width: 900px; */
+    /* margin: 0 auto; */ /* Center the block if max-width is used */
+}
+
+/* Style for the PlayCircle icon within the placeholder */
+.video-placeholder-container .lucide-play-circle {
+    /* You can add hover effects or other styles here */
+    cursor: pointer; /* Indicate it's clickable (even if it doesn't do anything yet) */
+    opacity: 0.8; /* Slightly transparent */
+    transition: opacity 0.3s ease; /* Smooth transition */
+}
+
+.video-placeholder-container .lucide-play-circle:hover {
+    opacity: 1; /* Fully opaque on hover */
+}
+
+/* Add any additional custom styles here if needed */
+
+.feature-section {
+  max-width: 1200px;
+  margin: 4rem auto;
+  padding: 0 2rem;
+}
+
+.feature-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  margin-bottom: 3rem;
+}
+
+.feature-text {
+  padding-right: 2rem;
+}
+
+.feature-label {
+  display: block;
+  text-transform: uppercase;
+  color: #666;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.feature-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--primary-100);
+  margin: 0;
+}
+
+.feature-description {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: #4a5568;
+  margin-bottom: 2rem;
+}
+
+.feature-boxes {
+  display: grid;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.feature-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.feature-icon {
+  color: var(--primary-100);
+  background: var(--primary-100);
+  padding: 8px;
+  border-radius: 8px;
+  color: white;
+}
+
+.feature-box h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #2d3748;
+}
+
+.feature-box p {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #4a5568;
+  margin: 0;
+}
+
+.feature-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-learn, .btn-signup {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-learn {
+  background: white;
+  color: var(--primary-100);
+  border: 2px solid var(--primary-100);
+}
+
+.btn-signup {
+  background: var(--primary-100);
+  color: white;
+  border: none;
+}
+
+.btn-learn:hover {
+  background: var(--primary-100);
+  color: white;
+}
+
+.btn-signup:hover {
+  background: var(--primary-200);
+}
+
+.video-container {
+  margin-top: 4rem;
+  width: 100%;
+}
+
+.video-placeholder {
+  width: 100%;
+  height: 500px;
+  background: #718096;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.video-placeholder:hover {
+  transform: scale(1.01);
+}
+
+.play-icon {
+  color: white;
+  opacity: 0.9;
+  transition: all 0.2s ease;
+}
+
+.video-placeholder:hover .play-icon {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .feature-title {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .feature-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .feature-text {
+    padding-right: 0;
+  }
+
+  .feature-title {
+    font-size: 2.5rem;
+  }
+
+  .video-placeholder {
+    height: 400px;
+  }
+}
