@@ -8,7 +8,6 @@ function FeatureVideoSection() {
       <div className="feature-content">
         {/* Left Column */}
         <div className="feature-text">
-          <span className="feature-label">Compare</span>
           <h2 className="feature-title">Find the Best Prices Instantly</h2>
         </div>
 
@@ -20,7 +19,7 @@ function FeatureVideoSection() {
 
           <div className="feature-boxes">
             <div className="feature-box">
-              <Package className="feature-icon" size={24} />
+              <Package className="feature-icon" size={32} strokeWidth={1.5} />
               <div>
                 <h3>Instant Savings</h3>
                 <p>Get real-time price comparisons and save money effortlessly.</p>
@@ -28,7 +27,7 @@ function FeatureVideoSection() {
             </div>
 
             <div className="feature-box">
-              <History className="feature-icon" size={24} />
+              <History className="feature-icon" size={32} strokeWidth={1.5} />
               <div>
                 <h3>Price History</h3>
                 <p>Track price trends to make informed purchasing decisions.</p>
@@ -38,7 +37,7 @@ function FeatureVideoSection() {
 
           <div className="feature-buttons">
             <button className="btn-start-now">
-              <MousePointerClick className="start-icon" size={24} />
+              <MousePointerClick className="start-icon" size={32} strokeWidth={1.5} />
               <span className="button-text">
                 <span className="button-main-text">Start Comparing Prices</span>
                 <span className="button-sub-text">Find the best deals instantly →</span>
@@ -51,7 +50,7 @@ function FeatureVideoSection() {
       {/* Video Section */}
       <div className="video-container">
         <div className="video-placeholder">
-          <PlayCircle size={64} className="play-icon" />
+          <PlayCircle size={72} className="play-icon" />
         </div>
       </div>
     </section>

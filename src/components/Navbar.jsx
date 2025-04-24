@@ -1,6 +1,31 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, X, ChevronDown, Search } from 'lucide-react'; // Import icons and Search icon
+import { Menu, X, ChevronDown, Search, Smartphone, Laptop, ShoppingBag, Home, Watch, Headphones, Camera, Trash2, Clock, TrendingUp } from 'lucide-react'; // Import icons and Search icon
 import styles from './Navbar.module.css'; // Import CSS Module
+
+const categories = [
+  { name: 'Electronics & Gadgets', icon: <Smartphone size={18} /> },
+  { name: 'Laptops & Computers', icon: <Laptop size={18} /> },
+  { name: 'Fashion & Apparel', icon: <ShoppingBag size={18} /> },
+  { name: 'Home & Furniture', icon: <Home size={18} /> },
+  { name: 'Watches & Accessories', icon: <Watch size={18} /> },
+  { name: 'Audio & Headphones', icon: <Headphones size={18} /> },
+  { name: 'Cameras & Photography', icon: <Camera size={18} /> },
+];
+
+const trendingSearches = [
+  "Latest Smartphones",
+  "Wireless Earbuds",
+  "Gaming Laptops",
+  "Smart Watches",
+  "4K Cameras"
+];
+
+const recentSearches = [
+  "iPhone 15 Pro",
+  "Samsung Galaxy",
+  "MacBook Air",
+  "Sony Headphones"
+];
 
 // Navbar component
 function Navbar() {
@@ -18,7 +43,7 @@ function Navbar() {
   const searchRef = useRef(null);
   // Ref for the search input to focus it when expanded
   const searchInputRef = useRef(null);
-
+  const [showRecommendations, setShowRecommendations] = useState(false);
 
   // Toggle mobile menu
   const toggleMobileMenu = () => {
@@ -36,6 +61,9 @@ function Navbar() {
   // Toggle search expansion
   const toggleSearch = () => {
     setIsSearchExpanded(!isSearchExpanded);
+    if (!isSearchExpanded) {
+      setShowRecommendations(true);
+    }
   };
 
   // Close dropdown or search if clicked outside
@@ -68,6 +96,45 @@ function Navbar() {
     }
   }, [isSearchExpanded]);
 
+  // Handle search focus
+  const handleSearchFocus = () => {
+    if (isSearchExpanded) {
+      setShowRecommendations(true);
+    }
+  };
+
+  // Handle search blur
+  const handleSearchBlur = (e) => {
+    // Don't hide if clicking inside recommendations or search container
+    if (
+      e.relatedTarget && 
+      (e.relatedTarget.closest(`.${styles.searchRecommendations}`) ||
+       e.relatedTarget.closest(`.${styles.searchContainer}`))
+    ) {
+      return;
+    }
+    setShowRecommendations(false);
+  };
+
+  // Handle recommendation click
+  const handleRecommendationClick = (term) => {
+    setSearchQuery(term);
+    // Keep recommendations visible
+    setShowRecommendations(true);
+    // Focus the input
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  };
+
+  // Clear recent searches
+  const clearRecentSearches = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // In a real app, you would clear from localStorage/backend
+    // For now, we'll just log
+    console.log('Clearing recent searches');
+  };
 
   return (
     <nav className={styles.navbar}> {/* Apply base navbar style */}
@@ -79,7 +146,7 @@ function Navbar() {
         </div>
 
         {/* Desktop Navigation Links */}
-        <div className={styles.desktopNav}>
+        <div className={`${styles.desktopNav} ${isSearchExpanded ? styles.searchExpanded : ''}`}>
           <a href="/" className={styles.navLink}>Home</a>
           <a href="/products" className={styles.navLink}>Products</a>
           {/* Dropdown */}
@@ -89,21 +156,27 @@ function Navbar() {
               <ChevronDown className={`${styles.chevron} ${isDropdownOpen ? styles.chevronOpen : ''}`} />
             </button>
             {isDropdownOpen && (
-              <div className={`${styles.dropdownMenu} ${isDropdownMenuOpen ? styles.dropdownMenuOpen : ''}`}>
-                <a href="/electronics" className={styles.dropdownItem}>Electronics</a>
-                <a href="/clothing" className={styles.dropdownItem}>Clothing</a>
-                <a href="/home" className={styles.dropdownItem}>Home & Kitchen</a>
+              <div className={`${styles.dropdownMenu} ${isDropdownOpen ? styles.dropdownMenuOpen : ''}`}>
+                {categories.map((category, index) => (
+                  <a 
+                    key={index} 
+                    href={`/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`} 
+                    className={styles.dropdownItem}
+                  >
+                    <span className={styles.categoryIcon}>{category.icon}</span>
+                    {category.name}
+                  </a>
+                ))}
               </div>
             )}
           </div>
           <a href="/about" className={styles.navLink}>About</a>
           <a href="/contact" className={styles.navLink}>Contact</a>
 
-          {/* Search Container (Desktop) - Moved inside desktopNav */}
+          {/* Search Container (Desktop) */}
           <div
             className={`${styles.searchContainer} ${isSearchExpanded ? styles.searchExpanded : ''}`}
             ref={searchRef}
-            // Removed hover events, expansion is now click-based
           >
             <input
               type="text"
@@ -111,16 +184,106 @@ function Navbar() {
               className={styles.searchInput}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              ref={searchInputRef} // Attach ref to input
-              // Prevent click on input from collapsing the search container
-              onClick={(e) => e.stopPropagation()}
+              ref={searchInputRef}
+              onFocus={handleSearchFocus}
+              onBlur={handleSearchBlur}
             />
-            {/* Button to toggle search expansion */}
-            <button className={styles.searchButton} onClick={toggleSearch}>
+            <button 
+              className={styles.searchButton} 
+              onClick={toggleSearch}
+              onMouseDown={(e) => e.preventDefault()} // Prevent blur event
+            >
               <Search size={18} className={styles.searchIcon} />
-              {/* Text is only visible when not expanded */}
               {!isSearchExpanded && <span className={styles.searchText}>Search</span>}
             </button>
+
+            {/* Search Recommendations */}
+            {isSearchExpanded && (
+              <div 
+                className={styles.searchRecommendations}
+                onMouseDown={(e) => e.preventDefault()} // Prevent blur event
+              >
+                {/* Trending Searches */}
+                <div className={styles.recommendationSection}>
+                  <h3 className={styles.recommendationTitle}>
+                    <TrendingUp size={16} />
+                    Trending Searches
+                  </h3>
+                  <div className={styles.recommendationList}>
+                    {trendingSearches.map((term, index) => (
+                      <button
+                        key={index}
+                        className={styles.recommendationItem}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          handleRecommendationClick(term);
+                        }}
+                      >
+                        {term}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Recent Searches */}
+                <div className={styles.recommendationSection}>
+                  <div className={styles.recommendationHeader}>
+                    <h3 className={styles.recommendationTitle}>
+                      <Clock size={16} />
+                      Recent Searches
+                    </h3>
+                    <button 
+                      className={styles.clearRecent}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        clearRecentSearches(e);
+                      }}
+                    >
+                      <Trash2 size={14} />
+                      Clear
+                    </button>
+                  </div>
+                  <div className={styles.recommendationList}>
+                    {recentSearches.map((term, index) => (
+                      <button
+                        key={index}
+                        className={styles.recommendationItem}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          handleRecommendationClick(term);
+                        }}
+                      >
+                        {term}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Popular Categories */}
+                <div className={styles.recommendationSection}>
+                  <h3 className={styles.recommendationTitle}>
+                    <ShoppingBag size={16} />
+                    Popular Categories
+                  </h3>
+                  <div className={styles.categoryGrid}>
+                    {categories.slice(0, 4).map((category, index) => (
+                      <button
+                        key={index}
+                        className={styles.categoryCard}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          handleRecommendationClick(category.name);
+                        }}
+                      >
+                        <span className={styles.categoryIcon}>{category.icon}</span>
+                        {category.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -135,9 +298,16 @@ function Navbar() {
         <div className={styles.mobileNavContent}>
           <a href="/" className={styles.mobileNavLink}>Home</a>
           <a href="/products" className={styles.mobileNavLink}>Products</a>
-          <a href="/electronics" className={styles.mobileNavLink}>Electronics</a>
-          <a href="/clothing" className={styles.mobileNavLink}>Clothing</a>
-          <a href="/home" className={styles.mobileNavLink}>Home & Kitchen</a>
+          {categories.map((category, index) => (
+            <a 
+              key={index}
+              href={`/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`} 
+              className={styles.mobileNavLink}
+            >
+              <span className={styles.categoryIcon}>{category.icon}</span>
+              {category.name}
+            </a>
+          ))}
           <a href="/about" className={styles.mobileNavLink}>About</a>
           <a href="/contact" className={styles.mobileNavLink}>Contact</a>
           <div className={styles.mobileSearchContainer}>

@@ -65,14 +65,6 @@
   padding-right: 2rem;
 }
 
-.feature-label {
-  display: block;
-  text-transform: uppercase;
-  color: #666;
-  font-size: 0.875rem;
-  margin-bottom: 0.5rem;
-}
-
 .feature-title {
   font-size: 3.5rem;
   font-weight: 700;
@@ -97,15 +89,16 @@
 .feature-box {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .feature-icon {
   color: var(--primary-100);
   background: var(--primary-100);
-  padding: 8px;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 12px;
   color: white;
+  flex-shrink: 0;
 }
 
 .feature-box h3 {
@@ -130,7 +123,7 @@
 .btn-start-now {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1.5rem;
   background: linear-gradient(135deg, #8a5cf6 0%, #6d28d9 100%);
   color: white;
   border: none;
@@ -152,11 +145,11 @@
 
 .start-icon {
   background: rgba(255, 255, 255, 0.15);
-  padding: 10px;
-  border-radius: 12px;
+  padding: 12px;
+  border-radius: 14px;
   transition: all 0.3s ease;
-  font-size: 28px;
   color: white;
+  flex-shrink: 0;
 }
 
 .btn-start-now:hover .start-icon {
