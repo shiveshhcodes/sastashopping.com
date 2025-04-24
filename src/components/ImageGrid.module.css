@@ -1,73 +1,72 @@
 /* ImageGrid.module.css */
 
 .gridSection {
-    padding: 4rem 0; /* Adjust padding */
-    background-color: var(--bg-off-white); /* Use off-white background */
+  padding: 4rem 0; /* Adjust padding */
+  background-color: var(--bg-off-white); /* Use off-white background */
+}
+
+@media (min-width: 768px) {
+  .gridSection {
+    padding: 5rem 0; /* Increase padding */
   }
-  
-  @media (min-width: 768px) {
-    .gridSection {
-      padding: 5rem 0; /* Increase padding */
-    }
-  }
-  
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem; /* Gap between items */
+}
+
+/* Responsive grid columns */
+@media (min-width: 640px) {
   .gridContainer {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 1.5rem; /* Gap between items */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem; /* Slightly larger gap */
   }
-  
-  /* Responsive grid columns */
-  @media (min-width: 640px) {
-    .gridContainer {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.75rem; /* Slightly larger gap */
-    }
+}
+@media (min-width: 768px) {
+  .gridContainer {
+    grid-template-columns: repeat(3, 1fr);
   }
-  @media (min-width: 768px) {
-    .gridContainer {
-      grid-template-columns: repeat(3, 1fr);
-    }
+}
+@media (min-width: 1024px) {
+  .gridContainer {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem; /* Larger gap on large screens */
   }
-  @media (min-width: 1024px) {
-    .gridContainer {
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2rem; /* Larger gap on large screens */
-    }
-  }
-  
-  .gridItem {
-    background-color: var(--border-light); /* Use light border color for placeholder bg */
-    border-radius: 8px;
-    aspect-ratio: 4 / 3; /* Maintain aspect ratio */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    transition: transform 0.25s ease, box-shadow 0.25s ease; /* Add transition */
-    cursor: pointer; /* Indicate interactivity */
-  }
-  
-  .gridItem:hover {
-    transform: scale(1.03); /* Scale up slightly on hover */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Add shadow on hover */
-  }
-  
-  
-  .gridImage {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  
-  /* Ensure placeholder icon is centered and styled */
-  .gridItem .placeholder-icon {
-    width: 25%;
-    height: 25%;
-    max-width: 60px;
-    max-height: 60px;
-    fill: #a0aec0; /* Gray color */
-    opacity: 0.8; /* Slightly transparent */
-  }
-  
+}
+
+.gridItem {
+  background-color: var(--border-light); /* Use light border color for placeholder bg */
+  border-radius: 8px;
+  aspect-ratio: 4 / 3; /* Maintain aspect ratio */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease; /* Add transition */
+  cursor: pointer; /* Indicate interactivity */
+}
+
+.gridItem:hover {
+  transform: scale(1.03); /* Scale up slightly on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Add shadow on hover */
+}
+
+
+.gridImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Ensure placeholder icon is centered and styled */
+.gridItem .placeholder-icon {
+  width: 25%;
+  height: 25%;
+  max-width: 60px;
+  max-height: 60px;
+  fill: #a0aec0; /* Gray color */
+  opacity: 0.8; /* Slightly transparent */
+}
