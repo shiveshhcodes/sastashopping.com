@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 // Assuming Lucide React for icons based on your dependencies
 import { Facebook, Instagram, Twitter, Linkedin, Youtube, Loader2, Check } from 'lucide-react';
 import './BottomSection.css'; // Import the CSS file for styling
@@ -8,6 +9,27 @@ function BottomSection() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const createRipple = (event) => {
+    const button = event.currentTarget;
+    const ripple = document.createElement('span');
+    const rect = button.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = event.clientX - rect.left - size / 2;
+    const y = event.clientY - rect.top - size / 2;
+
+    ripple.style.width = ripple.style.height = `${size}px`;
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+    ripple.className = 'ripple';
+
+    button.appendChild(ripple);
+
+    ripple.addEventListener('animationend', () => {
+      ripple.remove();
+    });
+  };
 
   const validateEmail = (email) => {
     // Strict validation for gmail.com addresses only
@@ -52,6 +74,22 @@ function BottomSection() {
     }, 10000);
   };
 
+  const handleHowWeWorkClick = (e) => {
+    e.preventDefault();
+    createRipple(e);
+
+    // Add a slight delay for the ripple effect to be visible
+    setTimeout(() => {
+      // First navigate
+      navigate('/how-we-work');
+      // Then scroll smoothly to top
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }, 300);
+  };
+
   return (
     <div className="bottom-section">
       {/* CTA Section */}
@@ -65,7 +103,12 @@ function BottomSection() {
               Why pay more when you can find the best deals in an instant? Start comparing prices now and unlock incredible savings on your favorite products.
             </p>
             <div className="d-flex">
-              <button className="btn btn-dark px-5 py-3">How We Work</button>
+              <button 
+                onClick={handleHowWeWorkClick}
+                className="btn btn-dark px-5 py-3 btn-ripple"
+              >
+                <span>How We Work</span>
+              </button>
             </div>
           </div>
         </div>

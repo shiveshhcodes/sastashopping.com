@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Menu, X, ChevronDown, Search, Smartphone, Laptop, ShoppingBag, Home, Watch, Headphones, Camera, Trash2, Clock, TrendingUp } from 'lucide-react'; // Import icons and Search icon
 import styles from './Navbar.module.css'; // Import CSS Module
 
@@ -142,13 +143,13 @@ function Navbar() {
 
         {/* Logo */}
         <div className={styles.logo}>
-          sastashopping.com
+          <Link to="/">sastashopping.com</Link>
         </div>
 
         {/* Desktop Navigation Links */}
         <div className={`${styles.desktopNav} ${isSearchExpanded ? styles.searchExpanded : ''}`}>
-          <a href="/" className={styles.navLink}>Home</a>
-          <a href="/products" className={styles.navLink}>Products</a>
+          <Link to="/" className={styles.navLink}>Home</Link>
+          <Link to="/products" className={styles.navLink}>Products</Link>
           {/* Dropdown */}
           <div className={styles.dropdown} ref={dropdownRef}>
             <button className={styles.dropdownToggle} onClick={toggleDropdown}>
@@ -158,20 +159,20 @@ function Navbar() {
             {isDropdownOpen && (
               <div className={`${styles.dropdownMenu} ${isDropdownOpen ? styles.dropdownMenuOpen : ''}`}>
                 {categories.map((category, index) => (
-                  <a 
+                  <Link 
                     key={index} 
-                    href={`/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`} 
+                    to={`/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`} 
                     className={styles.dropdownItem}
                   >
                     <span className={styles.categoryIcon}>{category.icon}</span>
                     {category.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
             )}
           </div>
-          <a href="/about" className={styles.navLink}>About</a>
-          <a href="/contact" className={styles.navLink}>Contact</a>
+          <Link to="/about" className={styles.navLink}>About</Link>
+          <Link to="/contact" className={styles.navLink}>Contact</Link>
 
           {/* Search Container (Desktop) */}
           <div
@@ -296,20 +297,20 @@ function Navbar() {
       {/* Mobile Menu (Conditional Class for animation/visibility) */}
       <div className={`${styles.mobileNav} ${isMobileMenuOpen ? styles.mobileNavOpen : ''}`}>
         <div className={styles.mobileNavContent}>
-          <a href="/" className={styles.mobileNavLink}>Home</a>
-          <a href="/products" className={styles.mobileNavLink}>Products</a>
+          <Link to="/" className={styles.mobileNavLink}>Home</Link>
+          <Link to="/products" className={styles.mobileNavLink}>Products</Link>
           {categories.map((category, index) => (
-            <a 
+            <Link 
               key={index}
-              href={`/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`} 
+              to={`/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`} 
               className={styles.mobileNavLink}
             >
               <span className={styles.categoryIcon}>{category.icon}</span>
               {category.name}
-            </a>
+            </Link>
           ))}
-          <a href="/about" className={styles.mobileNavLink}>About</a>
-          <a href="/contact" className={styles.mobileNavLink}>Contact</a>
+          <Link to="/about" className={styles.mobileNavLink}>About</Link>
+          <Link to="/contact" className={styles.mobileNavLink}>Contact</Link>
           <div className={styles.mobileSearchContainer}>
             <input
               type="text"

@@ -1,0 +1,146 @@
+/* ProcessSection.module.css */
+/* Styles will be added later */ /* src/pages/HowWeWork/components/ProcessSection/ProcessSection.module.css */
+
+/* Style for the overall process section */
+.processSection {
+    /* Add any specific background or border styles for this section */
+}
+
+/* Style for the section subtitle */
+.sectionSubtitle {
+    color: #343a40; /* Darker text color */
+    /* Add other text styles if needed */
+}
+
+/* Style for the numbered list to match screenshot appearance */
+.howItWorksList {
+    list-style-type: none; /* Remove default bullets/numbers */
+    padding-left: 0; /* Remove default padding */
+    font-size: 1.15rem; /* Slightly larger font size */
+    color: #555; /* Adjust text color */
+    max-width: 600px; /* Limit width for better readability */
+    margin: 0 auto; /* Center the list */
+}
+
+.howItWorksList li {
+    margin-bottom: 1.2rem; /* Increased space between list items */
+    position: relative; /* Needed for custom number positioning */
+    padding-left: 2rem; /* Increased space for the custom number */
+    line-height: 1.6; /* Improved line height */
+}
+
+.howItWorksList li::before {
+    content: counter(list-item); /* Use CSS counter for the number */
+    counter-increment: list-item; /* Increment the counter */
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-weight: bold;
+    font-size: 1.2rem; /* Slightly larger number font size */
+    color: #007bff; /* Example color for the number - match your theme */
+    margin-right: 0.5rem; /* Space between number and text */
+}
+
+/* Style for the feature box icon wrapper */
+.iconWrapper {
+    /* Add padding or background if icons need a container */
+    /* background-color: #f8f9fa; */
+    /* padding: 1rem; */
+    /* border-radius: 8px; */
+    /* display: inline-block; */ /* Make it inline-block if padding/background added */
+}
+
+/* Style for the feature boxes */
+.featureBox {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transition for hover effects */
+}
+
+/* Custom shadow on hover for feature boxes */
+.featureBox:hover {
+    transform: translateY(-5px); /* Lift the box slightly on hover */
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); /* More prominent shadow on hover */
+}
+
+
+/* Style for the prominent CTA button */
+.ctaButton {
+    background: linear-gradient(135deg, #6B46C1, #9F7AEA);
+    color: white;
+    padding: 2rem 3rem !important;
+    font-size: 1.5rem !important;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(107, 70, 193, 0.2);
+    width: auto;
+    min-width: 300px;
+    position: relative;
+    overflow: hidden;
+}
+
+.ctaButton:hover {
+    background: linear-gradient(135deg, #805AD5, #B794F4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(107, 70, 193, 0.3);
+}
+
+.ctaButton small {
+    font-size: 1rem !important;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+/* Add a subtle shine effect */
+.ctaButton::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0.2) 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 50%,
+        transparent 100%
+    );
+    transform: rotate(45deg);
+    transition: all 0.3s ease;
+}
+
+.ctaButton:hover::after {
+    transform: rotate(45deg) translate(50%, 50%);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .ctaButton {
+        padding: 1.5rem 2rem !important;
+        font-size: 1.25rem !important;
+        min-width: 260px;
+    }
+    
+    .ctaButton small {
+        font-size: 0.875rem !important;
+    }
+}
+
+/* Style for the empty space placeholder div */
+.emptySpace {
+    /* Set a background color similar to the screenshot */
+    background-color: #e9ecef; /* Lighter grey color for a softer look */
+    /* Set a height - adjust as needed */
+    height: 350px; /* Adjusted height */
+    /* Add rounded corners */
+    /* border-radius is set via Bootstrap rounded-lg class in JSX */
+    /* Add margin top to separate it from the button */
+    margin-top: 4rem; /* Increased top margin */
+    /* Ensure it takes full width */
+    width: 100%;
+    /* Optional: Add max-width if you don't want it to stretch too wide */
+    /* max-width: 900px; */
+    /* margin-left: auto; */
+    /* margin-right: auto; */ /* Center the block if max-width is used */
+}

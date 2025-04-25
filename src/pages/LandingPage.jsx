@@ -1,5 +1,4 @@
 import React from 'react';
-import Navbar from '../components/Navbar';
 import HeroSection from '../components/HeroSection';
 import ImageGrid from '../components/ImageGrid';
 import FeatureVideoSection from '../components/FeatureVideoSection';
@@ -22,7 +21,6 @@ const placeholderGridImages = [
 function LandingPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Navbar />
       <main style={{ flexGrow: 1 }}>
         <HeroSection />
         <FeatureVideoSection />

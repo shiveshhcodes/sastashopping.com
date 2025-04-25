@@ -1,0 +1,17 @@
+/* BenefitsSection.module.css */
+/* Styles will be added later */     /* src/pages/HowWeWork/components/BenefitsSection/BenefitsSection.module.css */
+
+    /* Style for the overall benefits section */
+    .benefitsSection {
+        /* Add any specific styles for this section */
+        /* background-color: #e9ecef; */ /* Example light background */
+    }
+
+    /* Style for the section subtitle */
+    .sectionSubtitle {
+        color: #343a40; /* Darker text color */
+    }
+
+    /* Add styles for benefit items, icons, etc. */
+
+    
