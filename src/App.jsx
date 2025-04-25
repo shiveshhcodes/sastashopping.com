@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import LandingPage from './pages/LandingPage';
 import HowWeWork from './pages/HowWeWork';
+import ProductsPage from './pages/Products/ProductsPage';
 import ScrollToTop from './components/ScrollToTop';
 import './App.css';
 
@@ -21,6 +22,9 @@ function App() {
 
         {/* Route for the How We Work Page */}
         <Route path="/how-we-work" element={<HowWeWork />} />
+
+        {/* Route for the Products Page */}
+        <Route path="/products" element={<ProductsPage />} />
 
         {/* Add other routes here as needed */}
       </Routes>

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 // Assuming Lucide React for icons based on your dependencies
 import { Facebook, Instagram, Twitter, Linkedin, Youtube, Loader2, Check } from 'lucide-react';
 import './BottomSection.css'; // Import the CSS file for styling
+import BrandText from './BrandText';
 
 function BottomSection() {
   const [email, setEmail] = useState('');
@@ -120,7 +121,7 @@ function BottomSection() {
           {/* Newsletter Section */}
           <div className="col-12 col-lg-4 pe-lg-5">
             <div className="mb-4">
-              <h3 className="h4 mb-0">SastaShopping.com</h3>
+              <h3 className="h4 mb-0"><BrandText /></h3>
             </div>
             <p className="text-muted mb-4">
               Subscribe to unlock exclusive deals, price drop alerts, and special discounts on your favorite products!
@@ -244,7 +245,7 @@ function BottomSection() {
         {/* Copyright Section */}
         <div className="row mt-5 pt-4 border-top">
           <div className="col-12 col-md-6">
-            <p className="text-muted mb-3 mb-md-0">© 2025 SastaShopping. All rights reserved.</p>
+            <p className="text-muted mb-3 mb-md-0">© 2025 <BrandText />. All rights reserved.</p>
           </div>
           <div className="col-12 col-md-6">
             <ul className="list-inline mb-0 text-md-end">
