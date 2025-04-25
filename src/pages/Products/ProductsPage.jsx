@@ -191,7 +191,7 @@ const ProductsPage = () => {
                 <h3>{category.title}</h3>
                 <p>{category.subtitle}</p>
                 <span className="item-count">{category.count}</span>
-              </div>
+          </div>
             </Link>
           ))}
         </div>
@@ -212,7 +212,7 @@ const ProductsPage = () => {
                 <h3>{category.title}</h3>
                 <p className="category-subtitle">{category.subtitle}</p>
                 <span className="category-item-count">{category.itemCount}</span>
-              </div>
+          </div>
             </Link>
           ))}
         </div>
@@ -227,7 +227,7 @@ const ProductsPage = () => {
               <h3 className="stat-value">{stat.value}</h3>
               <p className="stat-label">{stat.label}</p>
               <p className="stat-description">{stat.description}</p>
-            </div>
+          </div>
           ))}
         </div>
       </section>
@@ -244,11 +244,11 @@ const ProductsPage = () => {
                   <div className="testimonial-rating">
                     {'★'.repeat(testimonial.rating)}
                     {'☆'.repeat(5 - testimonial.rating)}
-                  </div>
-                </div>
-              </div>
+          </div>
+        </div>
+          </div>
               <p className="testimonial-text">"{testimonial.text}"</p>
-            </div>
+        </div>
           ))}
         </div>
       </section>
