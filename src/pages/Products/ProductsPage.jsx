@@ -1,9 +1,11 @@
 // src/pages/Products/ProductsPage.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './ProductsPage.css';
 import { BiMobile, BiLaptop, BiCloset } from 'react-icons/bi';
 import { IoWatchOutline, IoHeadsetOutline, IoCameraOutline } from 'react-icons/io5';
+import ProductCarousel from '../../components/ProductCarousel/ProductCarousel';
+import { trendingDeals } from '../../data/products';
 
 // Import icons from a proper icon library (you'll need to install react-icons)
 // import { FaMobileAlt, FaLaptop, FaTshirt, FaClock, FaHeadphones, FaCamera } from 'react-icons/fa';
@@ -15,6 +17,45 @@ import { IoWatchOutline, IoHeadsetOutline, IoCameraOutline } from 'react-icons/i
 // import UserTestimonials from './components/Sections/UserTestimonials';
 
 const ProductsPage = () => {
+  const [displayedProducts, setDisplayedProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const productsPerPage = 8;
+
+  useEffect(() => {
+    loadMoreProducts();
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const loadMoreProducts = () => {
+    if (loading || !hasMore) return;
+
+    setLoading(true);
+    const startIndex = (page - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+    const newProducts = trendingDeals.slice(startIndex, endIndex);
+
+    if (newProducts.length === 0) {
+      setHasMore(false);
+    } else {
+      setDisplayedProducts(prev => [...prev, ...newProducts]);
+      setPage(prev => prev + 1);
+    }
+    setLoading(false);
+  };
+
+  const handleScroll = () => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop
+      === document.documentElement.offsetHeight
+    ) {
+      loadMoreProducts();
+    }
+  };
+
   const categories = [
     {
       id: 1,
@@ -63,53 +104,6 @@ const ProductsPage = () => {
       icon: <IoCameraOutline className="category-icon" />,
       path: '/products/photography',
       count: '789 items'
-    }
-  ];
-
-  const trendingDeals = [
-    {
-      id: 1,
-      title: 'iPhone 14 Pro',
-      discount: '12%',
-      originalPrice: '₹129,900',
-      discountedPrice: '₹114,900',
-      image: 'https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=800&auto=format&fit=crop&q=60',
-      savings: 'Save ₹15,000',
-      rating: 4.8,
-      reviews: 256
-    },
-    {
-      id: 2,
-      title: 'Sony WH-1000XM4',
-      discount: '25%',
-      originalPrice: '₹29,990',
-      discountedPrice: '₹22,490',
-      image: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=800&auto=format&fit=crop&q=60',
-      savings: 'Save ₹7,500',
-      rating: 4.9,
-      reviews: 1205
-    },
-    {
-      id: 3,
-      title: 'Nike Air Max 270',
-      discount: '30%',
-      originalPrice: '₹12,995',
-      discountedPrice: '₹9,095',
-      image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&auto=format&fit=crop&q=60',
-      savings: 'Save ₹3,900',
-      rating: 4.7,
-      reviews: 892
-    },
-    {
-      id: 4,
-      title: 'Canon EOS R6',
-      discount: '15%',
-      originalPrice: '₹215,995',
-      discountedPrice: '₹183,595',
-      image: 'https://images.unsplash.com/photo-1621520291095-aa6c7137f048?w=800&auto=format&fit=crop&q=60',
-      savings: 'Save ₹32,400',
-      rating: 4.9,
-      reviews: 328
     }
   ];
 
@@ -205,32 +199,7 @@ const ProductsPage = () => {
 
       <section className="trending-deals-section">
         <h2 className="section-title">Trending & Top Deals This Week</h2>
-        <div className="deals-grid">
-          {trendingDeals.map(deal => (
-            <div key={deal.id} className="deal-card">
-              <div className="deal-image-container">
-                <img src={deal.image} alt={deal.title} />
-                <span className="discount-badge">{deal.discount}</span>
-              </div>
-              <div className="deal-info">
-                <h3>{deal.title}</h3>
-                <div className="price-container">
-                  <span className="discounted-price">{deal.discountedPrice}</span>
-                  <span className="original-price">{deal.originalPrice}</span>
-                </div>
-                <div className="rating-container">
-                  <div className="stars">
-                    {'★'.repeat(Math.floor(deal.rating))}
-                    {'☆'.repeat(5 - Math.floor(deal.rating))}
-                  </div>
-                  <span className="review-count">({deal.reviews})</span>
-                </div>
-                <span className="savings-text">{deal.savings}</span>
-                <button className="compare-button">Compare Prices</button>
-              </div>
-            </div>
-          ))}
-        </div>
+        <ProductCarousel products={displayedProducts} />
       </section>
 
       <section className="find-deals-section">
