@@ -1,6 +1,6 @@
 // src/pages/Products/ProductsPage.jsx
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './ProductsPage.css';
 import { BiMobile, BiLaptop, BiCloset } from 'react-icons/bi';
 import { IoWatchOutline, IoHeadsetOutline, IoCameraOutline } from 'react-icons/io5';
@@ -23,21 +23,44 @@ const ProductsPage = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const productsPerPage = 8;
+  const location = useLocation();
 
   useEffect(() => {
+    // Reset state when route changes
+    setDisplayedProducts([]);
+    setPage(1);
+    setHasMore(true);
     loadMoreProducts();
-    // Add scroll event listener
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [location.pathname]);
 
   const loadMoreProducts = () => {
     if (loading || !hasMore) return;
 
     setLoading(true);
+    const currentCategory = location.pathname.split('/').pop();
     const startIndex = (page - 1) * productsPerPage;
     const endIndex = startIndex + productsPerPage;
-    const newProducts = trendingDeals.slice(startIndex, endIndex);
+    
+    let filteredProducts;
+    if (currentCategory && currentCategory !== 'products') {
+      // Map route names to product categories
+      const categoryMap = {
+        'electronics': ['electronics'],
+        'laptops': ['electronics'],
+        'fashion': ['fashion'],
+        'watches': ['wearables'],
+        'audio': ['audio'],
+        'home': ['smart-home']
+      };
+      
+      filteredProducts = trendingDeals.filter(product => 
+        categoryMap[currentCategory]?.includes(product.category)
+      );
+    } else {
+      filteredProducts = trendingDeals;
+    }
+
+    const newProducts = filteredProducts.slice(startIndex, endIndex);
 
     if (newProducts.length === 0) {
       setHasMore(false);

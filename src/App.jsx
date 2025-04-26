@@ -4,6 +4,12 @@ import Navbar from './components/Navbar';
 import LandingPage from './pages/LandingPage';
 import HowWeWork from './pages/HowWeWork';
 import ProductsPage from './pages/Products/ProductsPage';
+import ElectronicsGadgets from './pages/Categories/ElectronicsGadgets';
+import LaptopsComputers from './pages/Categories/LaptopsComputers';
+import FashionApparel from './pages/Categories/FashionApparel';
+import WatchesAccessories from './pages/Categories/WatchesAccessories';
+import AudioHeadphones from './pages/Categories/AudioHeadphones';
+import HomeFurniture from './pages/Categories/HomeFurniture';
 import ScrollToTop from './components/ScrollToTop';
 import './App.css';
 
@@ -27,12 +33,12 @@ function App() {
         <Route path="/products" element={<ProductsPage />} />
         
         {/* Routes for product categories */}
-        <Route path="/products/electronics" element={<ProductsPage />} />
-        <Route path="/products/laptops" element={<ProductsPage />} />
-        <Route path="/products/fashion" element={<ProductsPage />} />
-        <Route path="/products/watches" element={<ProductsPage />} />
-        <Route path="/products/audio" element={<ProductsPage />} />
-        <Route path="/products/home" element={<ProductsPage />} />
+        <Route path="/products/electronics" element={<ElectronicsGadgets />} />
+        <Route path="/products/laptops" element={<LaptopsComputers />} />
+        <Route path="/products/fashion" element={<FashionApparel />} />
+        <Route path="/products/watches" element={<WatchesAccessories />} />
+        <Route path="/products/audio" element={<AudioHeadphones />} />
+        <Route path="/products/home" element={<HomeFurniture />} />
 
         {/* Add other routes here as needed */}
       </Routes>

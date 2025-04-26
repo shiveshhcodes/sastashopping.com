@@ -4,12 +4,12 @@ import { Menu, X, ChevronDown, Search, Smartphone, Laptop, ShoppingBag, Home, Wa
 import styles from './Navbar.module.css'; // Import CSS Module
 
 const categories = [
-  { name: 'Electronics & Gadgets', icon: <Smartphone size={18} /> },
-  { name: 'Laptops & Computers', icon: <Laptop size={18} /> },
-  { name: 'Fashion & Apparel', icon: <ShoppingBag size={18} /> },
-  { name: 'Watches & Accessories', icon: <Watch size={18} /> },
-  { name: 'Audio & Headphones', icon: <Headphones size={18} /> },
-  { name: 'Home & Furniture', icon: <Home size={18} /> },
+  { name: 'Electronics & Gadgets', path: '/products/electronics', icon: <Smartphone size={18} /> },
+  { name: 'Laptops & Computers', path: '/products/laptops', icon: <Laptop size={18} /> },
+  { name: 'Fashion & Apparel', path: '/products/fashion', icon: <ShoppingBag size={18} /> },
+  { name: 'Watches & Accessories', path: '/products/watches', icon: <Watch size={18} /> },
+  { name: 'Audio & Headphones', path: '/products/audio', icon: <Headphones size={18} /> },
+  { name: 'Home & Furniture', path: '/products/home', icon: <Home size={18} /> },
 ];
 
 const trendingSearches = [
@@ -160,7 +160,7 @@ function Navbar() {
                 {categories.map((category, index) => (
                   <Link 
                     key={index} 
-                    to={`/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`} 
+                    to={category.path}
                     className={styles.dropdownItem}
                   >
                     <span className={styles.categoryIcon}>{category.icon}</span>
@@ -300,7 +300,7 @@ function Navbar() {
           {categories.map((category, index) => (
             <Link 
               key={index}
-              to={`/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`} 
+              to={category.path}
               className={styles.mobileNavLink}
             >
               <span className={styles.categoryIcon}>{category.icon}</span>
