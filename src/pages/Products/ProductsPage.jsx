@@ -6,6 +6,7 @@ import { BiMobile, BiLaptop, BiCloset } from 'react-icons/bi';
 import { IoWatchOutline, IoHeadsetOutline, IoCameraOutline } from 'react-icons/io5';
 import ProductCarousel from '../../components/ProductCarousel/ProductCarousel';
 import { trendingDeals } from '../../data/products';
+import { Home } from 'react-feather';
 
 // Import icons from a proper icon library (you'll need to install react-icons)
 // import { FaMobileAlt, FaLaptop, FaTshirt, FaClock, FaHeadphones, FaCamera } from 'react-icons/fa';
@@ -99,11 +100,11 @@ const ProductsPage = () => {
     },
     {
       id: 6,
-      title: 'Photography',
-      subtitle: 'Professional Gear',
-      icon: <IoCameraOutline className="category-icon" />,
-      path: '/products/photography',
-      count: '789 items'
+      title: 'Home & Furniture',
+      subtitle: 'Home Essentials',
+      icon: <Home className="category-icon" />,
+      path: '/products/home',
+      count: '1,789 items'
     }
   ];
 

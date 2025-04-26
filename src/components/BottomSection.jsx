@@ -184,7 +184,6 @@ function BottomSection() {
           <div className="col-6 col-lg-2">
             <h5 className="fw-bold mb-4">Useful Links</h5>
             <ul className="list-unstyled mb-0">
-              <li className="mb-2"><a href="#" className="text-decoration-none text-muted">About Us</a></li>
               <li className="mb-2"><a href="#" className="text-decoration-none text-muted">Contact Us</a></li>
               <li className="mb-2"><a href="#" className="text-decoration-none text-muted">Help Center</a></li>
               <li className="mb-2"><a href="#" className="text-decoration-none text-muted">Blog Posts</a></li>

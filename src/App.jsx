@@ -25,6 +25,14 @@ function App() {
 
         {/* Route for the Products Page */}
         <Route path="/products" element={<ProductsPage />} />
+        
+        {/* Routes for product categories */}
+        <Route path="/products/electronics" element={<ProductsPage />} />
+        <Route path="/products/laptops" element={<ProductsPage />} />
+        <Route path="/products/fashion" element={<ProductsPage />} />
+        <Route path="/products/watches" element={<ProductsPage />} />
+        <Route path="/products/audio" element={<ProductsPage />} />
+        <Route path="/products/home" element={<ProductsPage />} />
 
         {/* Add other routes here as needed */}
       </Routes>

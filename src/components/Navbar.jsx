@@ -7,10 +7,9 @@ const categories = [
   { name: 'Electronics & Gadgets', icon: <Smartphone size={18} /> },
   { name: 'Laptops & Computers', icon: <Laptop size={18} /> },
   { name: 'Fashion & Apparel', icon: <ShoppingBag size={18} /> },
-  { name: 'Home & Furniture', icon: <Home size={18} /> },
   { name: 'Watches & Accessories', icon: <Watch size={18} /> },
   { name: 'Audio & Headphones', icon: <Headphones size={18} /> },
-  { name: 'Cameras & Photography', icon: <Camera size={18} /> },
+  { name: 'Home & Furniture', icon: <Home size={18} /> },
 ];
 
 const trendingSearches = [
@@ -171,7 +170,6 @@ function Navbar() {
               </div>
             )}
           </div>
-          <Link to="/about" className={styles.navLink}>About</Link>
           <Link to="/contact" className={styles.navLink}>Contact</Link>
 
           {/* Search Container (Desktop) */}
@@ -309,7 +307,6 @@ function Navbar() {
               {category.name}
             </Link>
           ))}
-          <Link to="/about" className={styles.mobileNavLink}>About</Link>
           <Link to="/contact" className={styles.mobileNavLink}>Contact</Link>
           <div className={styles.mobileSearchContainer}>
             <input
