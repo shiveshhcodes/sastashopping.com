@@ -1,0 +1,36 @@
+.ai-recommendation-modern {
+  border-radius: 1.2rem;
+  font-size: 1.15rem;
+  font-family: inherit;
+  box-shadow: 0 2px 12px rgba(56, 203, 137, 0.08);
+  position: relative;
+  overflow: hidden;
+  transition: border 0.2s, background 0.2s;
+}
+.ai-icon-pulse {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2.5px solid;
+  width: 54px;
+  height: 54px;
+  background: #fff;
+  box-shadow: 0 0 0 0 rgba(56, 203, 137, 0.13);
+  animation: ai-pulse 1.6s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+@keyframes ai-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(56, 203, 137, 0.13);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(56, 203, 137, 0.01);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(56, 203, 137, 0.13);
+  }
+}
+.ai-recommendation-subtext {
+  font-size: 0.98rem;
+  margin-top: 2px;
+} 

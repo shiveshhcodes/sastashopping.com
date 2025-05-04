@@ -1,8 +1,11 @@
 import React from 'react';
 import { Package, History, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import './FeatureVideoSection.css';
 
 function FeatureVideoSection() {
+  const navigate = useNavigate();
+
   return (
     <section className="feature-section">
       <div className="feature-content">
@@ -37,7 +40,7 @@ function FeatureVideoSection() {
             </div>
           </div>
 
-          <button className="cta-button">
+          <button className="cta-button" onClick={() => navigate('/compare-prices')}>
             <div className="cta-icon">
               <ArrowRight size={24} strokeWidth={2} />
             </div>

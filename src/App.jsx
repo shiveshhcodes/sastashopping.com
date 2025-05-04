@@ -11,6 +11,7 @@ import FashionApparel from './pages/Categories/FashionApparel';
 import WatchesAccessories from './pages/Categories/WatchesAccessories';
 import AudioHeadphones from './pages/Categories/AudioHeadphones';
 import HomeFurniture from './pages/Categories/HomeFurniture';
+import PriceComparisonPage from './pages/PriceComparison/PriceComparisonPage';
 import ScrollToTop from './components/ScrollToTop';
 import './App.css';
 
@@ -43,6 +44,9 @@ function App() {
         <Route path="/products/watches" element={<WatchesAccessories />} />
         <Route path="/products/audio" element={<AudioHeadphones />} />
         <Route path="/products/home" element={<HomeFurniture />} />
+
+        {/* Route for Price Comparison Page */}
+        <Route path="/compare-prices" element={<PriceComparisonPage />} />
 
         {/* Add other routes here as needed */}
       </Routes>

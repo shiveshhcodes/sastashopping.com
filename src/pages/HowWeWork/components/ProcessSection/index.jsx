@@ -1,9 +1,12 @@
 import React from 'react';
 // Assuming Lucide React for icons based on your dependencies
 import { Link, Repeat, LineChart, Search, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import styles from './ProcessSection.module.css'; // Import CSS Module
 
 function ProcessSection() {
+  const navigate = useNavigate();
+
   return (
     <section className={`${styles.processSection} container container-lg my-5 py-5`}> {/* Apply custom class and Bootstrap container/padding */}
       <div className="row">
@@ -139,7 +142,10 @@ function ProcessSection() {
        <div className="row mt-5"> {/* Top margin to separate from the above content */}
           <div className="col-12 text-center"> {/* Centered button */}
              {/* Prominent CTA Button with custom styling */}
-             <button className={`${styles.ctaButton} btn btn-primary btn-lg`}> {/* Apply custom button style */}
+             <button 
+               className={`${styles.ctaButton} btn btn-primary btn-lg`}
+               onClick={() => navigate('/compare-prices')}
+             >
                Start Comparing Prices
                <small className="d-block fw-normal mt-1">Find the best deals instantly</small> {/* Smaller text below button text */}
              </button>
