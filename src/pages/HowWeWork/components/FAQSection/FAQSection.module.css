@@ -1,16 +1,105 @@
 /* FAQSection.module.css */
 /* Styles will be added later */     /* src/pages/HowWeWork/components/FAQSection/FAQSection.module.css */
 
-    /* Style for the overall FAQ section */
+.faqSection {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 4rem 0;
+}
+
+.sectionSubtitle {
+    color: #2d3748;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.faqItem {
+    margin-bottom: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.faqItem:hover {
+    border-color: #cbd5e0;
+}
+
+.faqQuestion {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background-color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.faqQuestion h4 {
+    color: #2d3748;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+    flex: 1;
+}
+
+.faqQuestion svg {
+    color: #6b46c1;
+    transition: transform 0.3s ease;
+}
+
+.faqQuestion.active {
+    background-color: #f8fafc;
+}
+
+.faqQuestion.active svg {
+    transform: rotate(180deg);
+}
+
+.faqAnswer {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background-color: #ffffff;
+}
+
+.faqAnswer.active {
+    max-height: 500px;
+    padding: 0 1.5rem 1.5rem;
+}
+
+.faqAnswer p {
+    color: #4a5568;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
     .faqSection {
-        /* Add any specific styles for this section */
+        padding: 3rem 0;
     }
 
-    /* Style for the section subtitle */
     .sectionSubtitle {
-        color: #343a40; /* Darker text color */
+        font-size: 1.75rem;
     }
 
-    /* Add styles for FAQ items, questions, answers, etc. */
+    .faqQuestion {
+        padding: 1.25rem;
+    }
+
+    .faqQuestion h4 {
+        font-size: 1rem;
+    }
+
+    .faqAnswer.active {
+        padding: 0 1.25rem 1.25rem;
+    }
+
+    .faqAnswer p {
+        font-size: 0.9375rem;
+    }
+}
 
     

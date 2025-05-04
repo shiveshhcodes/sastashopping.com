@@ -1,6 +1,6 @@
 import React from 'react';
 // Assuming Lucide React for icons based on your dependencies
-import { Link, Repeat, LineChart } from 'lucide-react';
+import { Link, Repeat, LineChart, Search, AlertCircle } from 'lucide-react';
 import styles from './ProcessSection.module.css'; // Import CSS Module
 
 function ProcessSection() {
@@ -12,10 +12,61 @@ function ProcessSection() {
         <div className="col-12 col-md-6 mb-5 mb-md-0"> {/* Added bottom margin on small, removed on medium+ */}
           <h3 className={`${styles.sectionSubtitle} fw-bold mb-4`}>How It Works</h3> {/* Apply custom subtitle style */}
           <ol className={styles.howItWorksList}> {/* Apply custom list style from CSS Module */}
-            <li>Paste the product link from your favorite shopping site</li>
-            <li>Instantly compare prices from multiple platforms</li>
-            <li>View price history trends</li>
-            <li>Make the smartest purchase</li>
+            <li>
+              <div className={styles.stepContent}>
+                <div className={styles.stepIcon}>
+                  <Search size={24} />
+                </div>
+                <div>
+                  <h4>Find Your Product</h4>
+                  <p>Browse or search for products you want to buy</p>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div className={styles.stepContent}>
+                <div className={styles.stepIcon}>
+                  <Link size={24} />
+                </div>
+                <div>
+                  <h4>Paste Product Link</h4>
+                  <p>Copy and paste the product link from any supported retailer</p>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div className={styles.stepContent}>
+                <div className={styles.stepIcon}>
+                  <Repeat size={24} />
+                </div>
+                <div>
+                  <h4>Compare Prices</h4>
+                  <p>Instantly see prices from multiple platforms</p>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div className={styles.stepContent}>
+                <div className={styles.stepIcon}>
+                  <LineChart size={24} />
+                </div>
+                <div>
+                  <h4>Track Price History</h4>
+                  <p>View price trends and set alerts for price drops</p>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div className={styles.stepContent}>
+                <div className={styles.stepIcon}>
+                  <AlertCircle size={24} />
+                </div>
+                <div>
+                  <h4>Get Price Alerts</h4>
+                  <p>Receive notifications when prices drop to your desired level</p>
+                </div>
+              </div>
+            </li>
           </ol>
         </div>
 
@@ -50,25 +101,36 @@ function ProcessSection() {
                   </div>
                   <h5 className="fw-bold mb-2 text-dark">Compare Prices</h5> {/* Feature title, darker text color */}
                   <p className="text-muted mb-0"> {/* Muted text color */}
-                    Instantly see prices across shopping platforms
+                    See prices from multiple platforms side by side
                   </p>
                 </div>
               </div>
 
-              {/* Feature Box 3: View Price History - Placed in its own row or adjusted layout */}
-              {/* To match the screenshot where it seems to be below the first two on the right */}
-               <div className="col-12"> {/* Takes full width in this inner row */}
-                 <div className={`${styles.featureBox} text-center p-4 border rounded-lg shadow-sm`}> {/* Apply custom box style, Bootstrap padding, border, rounded, shadow */}
-                   <div className={styles.iconWrapper}> {/* Apply custom icon wrapper style */}
-                      {/* Increased icon size and changed color to primary */}
-                      <LineChart size={48} className="text-primary" />
-                   </div>
-                   <h5 className="fw-bold mb-2 text-dark">View Price History</h5> {/* Feature title, darker text color */}
-                   <p className="text-muted mb-0"> {/* Muted text color */}
-                     Track prices over time to make informed purchasing decisions
-                   </p>
-                 </div>
-               </div>
+              {/* Feature Box 3: Price History */}
+              <div className="col-12 col-sm-6 mb-4">
+                <div className={`${styles.featureBox} text-center p-4 border rounded-lg shadow-sm`}>
+                  <div className={styles.iconWrapper}>
+                    <LineChart size={48} className="text-primary" />
+                  </div>
+                  <h5 className="fw-bold mb-2 text-dark">Price History</h5>
+                  <p className="text-muted mb-0">
+                    Track price trends and make informed decisions
+                  </p>
+                </div>
+              </div>
+
+              {/* Feature Box 4: Price Alerts */}
+              <div className="col-12 col-sm-6 mb-4">
+                <div className={`${styles.featureBox} text-center p-4 border rounded-lg shadow-sm`}>
+                  <div className={styles.iconWrapper}>
+                    <AlertCircle size={48} className="text-primary" />
+                  </div>
+                  <h5 className="fw-bold mb-2 text-dark">Price Alerts</h5>
+                  <p className="text-muted mb-0">
+                    Get notified when prices drop to your desired level
+                  </p>
+                </div>
+              </div>
            </div>
         </div>
       </div>

@@ -3,15 +3,91 @@
 
     /* Style for the overall benefits section */
     .benefitsSection {
-        /* Add any specific styles for this section */
-        /* background-color: #e9ecef; */ /* Example light background */
+        background-color: #f8fafc;
+        border-radius: 16px;
+        padding: 4rem 0;
     }
 
     /* Style for the section subtitle */
     .sectionSubtitle {
-        color: #343a40; /* Darker text color */
+        color: #2d3748;
+        font-size: 2rem;
+        margin-bottom: 1rem;
     }
 
     /* Add styles for benefit items, icons, etc. */
+    .benefitCard {
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 2rem;
+        height: 100%;
+        transition: all 0.3s ease;
+        border: 1px solid #e2e8f0;
+        text-align: center;
+    }
+
+    .benefitCard:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        border-color: #cbd5e0;
+    }
+
+    .benefitIcon {
+        background-color: #f3f4f6;
+        border-radius: 12px;
+        padding: 1rem;
+        color: #6b46c1;
+        display: inline-flex;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .benefitCard:hover .benefitIcon {
+        background-color: #6b46c1;
+        color: #ffffff;
+        transform: scale(1.1);
+    }
+
+    .benefitTitle {
+        color: #2d3748;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .benefitDescription {
+        color: #4a5568;
+        font-size: 1rem;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+        .benefitsSection {
+            padding: 3rem 0;
+        }
+
+        .sectionSubtitle {
+            font-size: 1.75rem;
+        }
+
+        .benefitCard {
+            padding: 1.5rem;
+        }
+
+        .benefitIcon {
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .benefitTitle {
+            font-size: 1.125rem;
+        }
+
+        .benefitDescription {
+            font-size: 0.9375rem;
+        }
+    }
 
     

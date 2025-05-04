@@ -3,77 +3,87 @@
 
 /* Style for the overall process section */
 .processSection {
-    /* Add any specific background or border styles for this section */
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 /* Style for the section subtitle */
 .sectionSubtitle {
-    color: #343a40; /* Darker text color */
-    /* Add other text styles if needed */
+    color: #2d3748;
+    font-size: 2rem;
+    margin-bottom: 2rem;
 }
 
-/* Style for the numbered list to match screenshot appearance */
+/* Style for the numbered list */
 .howItWorksList {
-    list-style-type: none; /* Remove default bullets/numbers */
-    padding-left: 0; /* Remove default padding */
-    font-size: 1.15rem; /* Slightly larger font size */
-    color: #555; /* Adjust text color */
-    max-width: 600px; /* Limit width for better readability */
-    margin: 0 auto; /* Center the list */
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
 }
 
 .howItWorksList li {
-    margin-bottom: 1.2rem; /* Increased space between list items */
-    position: relative; /* Needed for custom number positioning */
-    padding-left: 2rem; /* Increased space for the custom number */
-    line-height: 1.6; /* Improved line height */
+    margin-bottom: 2rem;
+    position: relative;
+    padding-left: 0;
 }
 
-.howItWorksList li::before {
-    content: counter(list-item); /* Use CSS counter for the number */
-    counter-increment: list-item; /* Increment the counter */
-    position: absolute;
-    left: 0;
-    top: 0;
-    font-weight: bold;
-    font-size: 1.2rem; /* Slightly larger number font size */
-    color: #007bff; /* Example color for the number - match your theme */
-    margin-right: 0.5rem; /* Space between number and text */
+.stepContent {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.stepIcon {
+    background-color: #f3f4f6;
+    border-radius: 12px;
+    padding: 0.75rem;
+    color: #6b46c1;
+    flex-shrink: 0;
+}
+
+.stepContent h4 {
+    color: #2d3748;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.stepContent p {
+    color: #4a5568;
+    font-size: 1rem;
+    margin: 0;
 }
 
 /* Style for the feature box icon wrapper */
 .iconWrapper {
-    /* Add padding or background if icons need a container */
-    /* background-color: #f8f9fa; */
-    /* padding: 1rem; */
-    /* border-radius: 8px; */
-    /* display: inline-block; */ /* Make it inline-block if padding/background added */
+    margin-bottom: 1rem;
 }
 
 /* Style for the feature boxes */
 .featureBox {
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transition for hover effects */
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    height: 100%;
 }
 
-/* Custom shadow on hover for feature boxes */
 .featureBox:hover {
-    transform: translateY(-5px); /* Lift the box slightly on hover */
-    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); /* More prominent shadow on hover */
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-color: #cbd5e0;
 }
-
 
 /* Style for the prominent CTA button */
 .ctaButton {
     background: linear-gradient(135deg, #6B46C1, #9F7AEA);
     color: white;
-    padding: 2rem 3rem !important;
-    font-size: 1.5rem !important;
+    padding: 1.25rem 2.5rem !important;
+    font-size: 1.25rem !important;
     font-weight: 600;
     border: none;
     border-radius: 12px;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(107, 70, 193, 0.2);
-    width: auto;
     min-width: 300px;
     position: relative;
     overflow: hidden;
@@ -86,44 +96,30 @@
 }
 
 .ctaButton small {
-    font-size: 1rem !important;
+    font-size: 0.875rem !important;
     opacity: 0.9;
     font-weight: 400;
 }
 
-/* Add a subtle shine effect */
-.ctaButton::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(
-        to bottom right,
-        rgba(255, 255, 255, 0.2) 0%,
-        rgba(255, 255, 255, 0.1) 50%,
-        transparent 50%,
-        transparent 100%
-    );
-    transform: rotate(45deg);
-    transition: all 0.3s ease;
-}
-
-.ctaButton:hover::after {
-    transform: rotate(45deg) translate(50%, 50%);
-}
-
 /* Responsive styles */
 @media (max-width: 768px) {
-    .ctaButton {
-        padding: 1.5rem 2rem !important;
-        font-size: 1.25rem !important;
-        min-width: 260px;
+    .sectionSubtitle {
+        font-size: 1.75rem;
     }
-    
-    .ctaButton small {
-        font-size: 0.875rem !important;
+
+    .stepContent {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .stepIcon {
+        margin-bottom: 0.5rem;
+    }
+
+    .ctaButton {
+        padding: 1rem 2rem !important;
+        font-size: 1.125rem !important;
+        min-width: 260px;
     }
 }
 
