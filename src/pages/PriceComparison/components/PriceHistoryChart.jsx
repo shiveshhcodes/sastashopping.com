@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceDot } from 'recharts';
 
 const COLORS = {
@@ -7,14 +7,30 @@ const COLORS = {
   dot: '#6a6ee7',
 };
 
+const MONTHS = ['Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'April'];
+
+function generateRandomChartData() {
+  // Generate a random walk for price data
+  let price = Math.floor(Math.random() * 60) + 450; // Start between 450-510
+  const data = [];
+  for (let i = 0; i < MONTHS.length; i++) {
+    // Randomly go up or down
+    const change = Math.floor(Math.random() * 60) - 20; // -20 to +40
+    price = Math.max(440, Math.min(600, price + change));
+    data.push({ month: MONTHS[i], price });
+  }
+  return data;
+}
+
 function findOptimalPoints(data) {
-  // For demo: highlight the lowest price point(s)
   if (!data || !data.length) return [];
   const minPrice = Math.min(...data.map(d => d.price));
   return data.filter(d => d.price === minPrice);
 }
 
-function PriceHistoryChart({ data }) {
+function PriceHistoryChart() {
+  // Generate new random data on each mount
+  const data = useMemo(() => generateRandomChartData(), []);
   const optimalPoints = findOptimalPoints(data);
   return (
     <div className="price-history-chart-container">
