@@ -1,0 +1,389 @@
+/* ServicesPage.css */
+
+/* Custom styles for the Services Page */
+
+/* Style for the wrapper around icons in feature boxes */
+.service-icon-wrapper {
+  /* Add padding, background, or border to the icon container if needed */
+  /* background-color: #e9ecef; */
+  /* padding: 12px; */ /* Increased padding */
+  /* border-radius: 50%; */
+  flex-shrink: 0; /* Prevent icon wrapper from shrinking */
+  display: flex; /* Use flexbox to center the icon */
+  justify-content: center;
+  align-items: center;
+}
+
+/* Style for the feature boxes themselves */
+.service-feature-box {
+  /* Add hover effects or other custom styles */
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  height: 100%; /* Ensure boxes have equal height */
+}
+
+.service-feature-box:hover {
+  transform: translateY(-8px); /* Lift slightly more on hover */
+  box-shadow: 0 1.2rem 2.5rem rgba(0, 0, 0, 0.15); /* More prominent shadow on hover */
+}
+
+/* Add a subtle transition for elements that change on hover */
+.transition-shadow {
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+
+/* Style for the list of features */
+.service-features-list {
+  /* Add any specific list styling if needed */
+  font-size: 1.1rem; /* Slightly larger font size */
+  color: #495057; /* Darker text color */
+}
+
+.service-features-list li {
+  margin-bottom: 0.75rem; /* Increased space between list items */
+  line-height: 1.6; /* Improved line height */
+}
+
+/* Style for the FAQ item */
+.service-faq-item {
+  cursor: pointer; /* Indicate clickable */
+  /* Add hover effects if needed */
+  transition: background-color 0.3s ease;
+  border-color: #dee2e6 !important; /* Ensure Bootstrap border color is used */
+}
+
+.service-faq-item:hover {
+  background-color: #f8f9fa; /* Light background on hover */
+}
+
+/* Style for the FAQ answer (initially hidden) */
+.service-faq-answer {
+  /* Add styling for the answer text */
+  line-height: 1.6;
+  color: #6c757d; /* Muted text color */
+}
+
+
+/* Style for the final Call to Action section at the bottom */
+.service-cta-bottom {
+  background-color: #6f42c1; /* Example purple color - match the screenshot */
+  /* Add padding, text color, etc. (handled by Bootstrap classes in JSX) */
+}
+
+/* Style for the button within the final CTA section */
+.service-cta-button-bottom {
+  padding: 1rem 2.5rem; /* Adjusted padding */
+  font-size: 1.25rem; /* Adjusted font size */
+  border-radius: 0.5rem; /* Slightly larger border radius */
+  transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* Subtle shadow */
+}
+
+.service-cta-button-bottom:hover {
+  transform: translateY(-2px); /* Subtle lift on hover */
+  box-shadow: 0 0.7rem 1.2rem rgba(0, 0, 0, 0.2); /* Slightly larger shadow on hover */
+}
+
+/* Add any additional custom styles here if needed */
+
+.services-page {
+  min-height: 100vh;
+}
+
+.services-main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 1rem;
+}
+
+/* Hero Section */
+.hero-section {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: bold;
+  color: #1a1a1a;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: #666;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn-learn-more,
+.btn-sign-up {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-learn-more {
+  background: transparent;
+  border: 2px solid #6f42c1;
+  color: #6f42c1;
+}
+
+.btn-sign-up {
+  background: #6f42c1;
+  border: 2px solid #6f42c1;
+  color: white;
+}
+
+.btn-learn-more:hover,
+.btn-sign-up:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Features Grid */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.feature-box {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-box:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.feature-content {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.feature-icon {
+  color: #6f42c1;
+  flex-shrink: 0;
+  opacity: 1.2;
+  transition: all 0.3s ease;
+}
+
+.feature-box:hover .feature-icon {
+  opacity: 1;
+  transform: scale(1.2);
+  color: #5a32a3;
+}
+
+.feature-text {
+  flex: 1;
+}
+
+.feature-text h5 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 0.75rem;
+  text-align: left;
+}
+
+.feature-text p {
+  color: #666;
+  margin: 0;
+  line-height: 1.6;
+  text-align: left;
+}
+
+/* Features List Section */
+.features-list-section {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.features-list-section h3 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1a1a1a;
+  margin-bottom: 2rem;
+}
+
+.features-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.features-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.features-column li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #1a1a1a;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.features-column li svg {
+  color: #28a745;
+}
+
+/* FAQ Section */
+.faq-section {
+  margin-bottom: 4rem;
+}
+
+.faq-section h3 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1a1a1a;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.faq-items {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem;
+  cursor: pointer;
+  background-color: #f8f9fa;
+  transition: background-color 0.3s ease;
+}
+
+.faq-question:hover {
+  background-color: #e9ecef;
+}
+
+.faq-answer {
+  padding: 1.25rem;
+  background-color: white;
+  color: #495057;
+  line-height: 1.6;
+  display: none;
+  transition: all 0.3s ease;
+}
+
+.faq-answer.active {
+  display: block;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.faq-question svg {
+  transition: transform 0.3s ease;
+}
+
+.faq-question.active svg {
+  transform: rotate(45deg);
+}
+
+/* CTA Section */
+.cta-section {
+  background-color: #6f42c1;
+  color: white;
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.cta-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.cta-content h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+}
+
+.cta-button {
+  background: white;
+  color: #6f42c1;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .features-list-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-content h2 {
+    font-size: 2rem;
+  }
+}

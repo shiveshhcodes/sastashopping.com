@@ -17,6 +17,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
 .logo {
@@ -28,28 +29,18 @@
 }
 
 .desktopNav {
-  display: none;
+  display: flex;
   align-items: center;
   gap: 1.5rem;
   position: relative;
+  margin-left: auto;
 }
 
-@media (min-width: 768px) {
-  .desktopNav {
-    display: flex;
-  }
-}
-
-/* Remove all fading animations */
-.desktopNav .navLink,
-.desktopNav .dropdown,
-.desktopNav.searchExpanded .navLink,
-.desktopNav.searchExpanded .dropdown {
-  opacity: 1 !important;
-  transform: none !important;
-  pointer-events: auto !important;
-  transition: color 0.3s ease !important;
-  visibility: visible !important;
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-right: 1.5rem;
 }
 
 .navLink {
@@ -61,6 +52,7 @@
   align-items: center;
   height: 44px;
   line-height: 44px;
+  white-space: nowrap;
 }
 
 .navLink:hover {
@@ -257,13 +249,66 @@
   overflow: hidden;
 }
 
-/* Remove desktopSearch container as it's now inline */
-.desktopSearch {
+/* Mobile Menu Styles */
+.mobileMenuButton {
   display: none;
+  background: none;
+  border: none;
+  color: var(--text-100);
+  cursor: pointer;
+  padding: 0.5rem;
 }
 
+@media (max-width: 768px) {
+  .desktopNav {
+    display: none;
+  }
+  
+  .mobileMenuButton {
+    display: block;
+  }
+  
+  .navLinks {
+    display: none;
+  }
+}
 
-/* Mobile Search Styles */
+.mobileNav {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--bg-light);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-top: 1px solid var(--border-light);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  z-index: 40;
+}
+
+.mobileNavOpen {
+  max-height: 500px;
+}
+
+.mobileNavContent {
+  padding: 1rem;
+}
+
+.mobileNavLink {
+  display: block;
+  padding: 0.8rem 1rem;
+  color: var(--text-dark);
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  font-weight: 500;
+}
+
+.mobileNavLink:hover {
+  background-color: var(--bg-off-white);
+}
+
 .mobileSearchContainer {
   margin-top: 1rem;
   display: flex;
@@ -281,65 +326,9 @@
   font-size: 0.9rem;
 }
 
-/* Mobile Menu Styles */
-.mobileMenuButton {
-  display: block;
-  background: none;
-  border: none;
-  color: var(--text-dark); /* Dark icon */
-  padding: 0;
-  cursor: pointer;
-}
-@media (min-width: 768px) {
-  .mobileMenuButton {
-    display: none;
-  }
-}
-
-.mobileNav {
-  /* Position absolute for smoother slide-down (requires parent relative/static) */
-  position: absolute;
-  top: 100%; /* Position below navbar */
-  left: 0;
-  right: 0;
-  background-color: var(--bg-light); /* White background */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-top: 1px solid var(--border-light);
-  max-height: 0; /* Start hidden */
-  overflow: hidden; /* Hide content */
-  transition: max-height 0.3s ease-out; /* Animate height */
-  z-index: 40; /* Below navbar */
-}
-
-.mobileNavOpen {
-  max-height: 500px; /* Allow height to expand */
-  /* Adjust max-height if menu is taller */
-}
-
-/* Add padding inside the mobile nav container */
-.mobileNavContent {
-    padding: 1rem;
-}
-
-
-.mobileNavLink {
-  display: block;
-  padding: 0.8rem 1rem;
-  color: var(--text-dark);
-  text-decoration: none;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
-  font-weight: 500;
-}
-
-.mobileNavLink:hover {
-  background-color: var(--bg-off-white);
-}
-
-/* Style for the mobile search button to match others */
 .mobileSearchButton {
-    width: 100%;
-    justify-content: center;
+  width: 100%;
+  justify-content: center;
 }
 
 /* Search Recommendations */

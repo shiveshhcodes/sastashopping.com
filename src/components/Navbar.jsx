@@ -147,30 +147,33 @@ function Navbar() {
 
         {/* Desktop Navigation Links */}
         <div className={`${styles.desktopNav} ${isSearchExpanded ? styles.searchExpanded : ''}`}>
-          <Link to="/" className={styles.navLink}>Home</Link>
-          <Link to="/products" className={styles.navLink}>Products</Link>
-          {/* Dropdown */}
-          <div className={styles.dropdown} ref={dropdownRef}>
-            <button className={styles.dropdownToggle} onClick={toggleDropdown}>
-              Categories
-              <ChevronDown className={`${styles.chevron} ${isDropdownOpen ? styles.chevronOpen : ''}`} />
-            </button>
-            {isDropdownOpen && (
-              <div className={`${styles.dropdownMenu} ${isDropdownOpen ? styles.dropdownMenuOpen : ''}`}>
-                {categories.map((category, index) => (
-                  <Link 
-                    key={index} 
-                    to={category.path}
-                    className={styles.dropdownItem}
-                  >
-                    <span className={styles.categoryIcon}>{category.icon}</span>
-                    {category.name}
-                  </Link>
-                ))}
-              </div>
-            )}
+          <div className={styles.navLinks}>
+            <Link to="/" className={styles.navLink}>Home</Link>
+            <Link to="/services" className={styles.navLink}>Services</Link>
+            <Link to="/products" className={styles.navLink}>Products</Link>
+            {/* Dropdown */}
+            <div className={styles.dropdown} ref={dropdownRef}>
+              <button className={styles.dropdownToggle} onClick={toggleDropdown}>
+                Categories
+                <ChevronDown className={`${styles.chevron} ${isDropdownOpen ? styles.chevronOpen : ''}`} />
+              </button>
+              {isDropdownOpen && (
+                <div className={`${styles.dropdownMenu} ${isDropdownOpen ? styles.dropdownMenuOpen : ''}`}>
+                  {categories.map((category, index) => (
+                    <Link 
+                      key={index} 
+                      to={category.path}
+                      className={styles.dropdownItem}
+                    >
+                      <span className={styles.categoryIcon}>{category.icon}</span>
+                      {category.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+            <Link to="/contact" className={styles.navLink}>Contact</Link>
           </div>
-          <Link to="/contact" className={styles.navLink}>Contact</Link>
 
           {/* Search Container (Desktop) */}
           <div
@@ -296,6 +299,7 @@ function Navbar() {
       <div className={`${styles.mobileNav} ${isMobileMenuOpen ? styles.mobileNavOpen : ''}`}>
         <div className={styles.mobileNavContent}>
           <Link to="/" className={styles.mobileNavLink}>Home</Link>
+          <Link to="/services" className={styles.mobileNavLink}>Services</Link>
           <Link to="/products" className={styles.mobileNavLink}>Products</Link>
           {categories.map((category, index) => (
             <Link 

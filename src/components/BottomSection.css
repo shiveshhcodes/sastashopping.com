@@ -37,72 +37,111 @@
 }
 
 .bottom-section {
-  background: linear-gradient(to bottom, #ffffff, #f8f5ff);
-  padding: 80px 0 0;
+  background-color: var(--bg-100);
+  padding: 4rem 0;
 }
 
 /* CTA Section styles */
 .bottom-section .display-4 {
-  font-size: 3.5rem;
+  font-size: 4rem;
   line-height: 1.2;
-  margin-bottom: 0;
-  background: linear-gradient(135deg, #6B46C1, #9F7AEA);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  color: transparent;
+  transition: all 0.3s ease;
 }
 
 .bottom-section .lead {
-  font-size: 1.125rem;
+  font-size: 1.1rem;
   line-height: 1.6;
-  color: #4A5568;
+  color: var(--text-200);
 }
 
 /* Updated button styles */
 .bottom-section .btn {
-  font-weight: 600;
+  font-weight: 400;
   border-radius: 8px;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
   font-size: 1.125rem;
-  letter-spacing: 0.5px;
+  font-family: var(--font-heading);
+  letter-spacing: 0.3px;
+  color: #ffffff;
 }
 
 .bottom-section .btn-dark {
-  background: linear-gradient(135deg, #6B46C1, #9F7AEA);
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
   border: none;
-  padding: 1.25rem 3rem;
-  box-shadow: 0 4px 15px rgba(107, 70, 193, 0.2);
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.bottom-section .btn-dark span {
+  color: #ffffff;
+  position: relative;
+  z-index: 1;
 }
 
 .bottom-section .btn-dark:hover {
-  background: linear-gradient(135deg, #553C9A, #805AD5);
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(107, 70, 193, 0.3);
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.25);
+}
+
+.bottom-section .btn-dark:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.2);
+}
+
+/* Add a subtle shine effect on hover */
+.bottom-section .btn-dark::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: 0.5s ease;
+}
+
+.bottom-section .btn-dark:hover::before {
+  left: 100%;
 }
 
 /* Footer styles */
 .bottom-section footer {
-  font-size: 0.9375rem;
-  padding-top: 80px;
-  background: linear-gradient(to bottom, transparent, #f8f5ff);
+  font-size: 0.9rem;
+  padding-top: 4rem;
+  background-color: var(--bg-100);
 }
 
 .bottom-section h5 {
-  font-size: 1.125rem;
-  color: #553C9A;
+  font-size: 1.1rem;
+  color: var(--primary-100);
   font-weight: 600;
 }
 
 .bottom-section .form-control {
   padding: 0.75rem 1rem;
-  border: 1px solid #E9D8FD;
-  border-radius: 8px;
-  background-color: #ffffff;
+  border: 1px solid var(--accent-100);
+  border-radius: 6px;
+  background-color: var(--bg-300);
 }
 
 .bottom-section .form-control:focus {
-  box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.1);
-  border-color: #9F7AEA;
+  box-shadow: 0 0 0 2px var(--primary-300);
+  border-color: var(--primary-100);
 }
 
 /* Newsletter section button */
@@ -118,13 +157,12 @@
 
 /* Social media links */
 .bottom-section .list-unstyled a {
-  transition: all 0.2s ease;
-  color: #4A5568;
+  color: var(--text-200);
+  transition: color 0.2s ease;
 }
 
 .bottom-section .list-unstyled a:hover {
-  color: #6B46C1 !important;
-  transform: translateX(4px);
+  color: var(--primary-100);
 }
 
 .bottom-section .list-unstyled a svg {
@@ -141,12 +179,12 @@
 }
 
 .bottom-section .list-inline a {
-  color: #4A5568;
-  transition: all 0.2s ease;
+  color: var(--text-200);
+  transition: color 0.2s ease;
 }
 
 .bottom-section .list-inline a:hover {
-  color: #6B46C1 !important;
+  color: var(--primary-100);
 }
 
 /* Newsletter section */
@@ -167,37 +205,25 @@
 
 /* Border styles */
 .bottom-section .border-top {
-  border-color: #E9D8FD !important;
+  border-color: var(--accent-100) !important;
 }
 
 /* Responsive adjustments */
-@media (max-width: 767.98px) {
+@media (max-width: 768px) {
   .bottom-section {
-    padding: 40px 0 0;
+    padding: 2rem 0;
   }
 
   .bottom-section .display-4 {
-    font-size: 2.5rem;
-    margin-bottom: 1.5rem;
+    font-size: 2rem;
   }
   
   .bottom-section footer {
-    padding-top: 40px;
-  }
-
-  .bottom-section .list-inline {
-    text-align: left;
-    margin-top: 1rem;
+    padding-top: 2rem;
   }
   
-  .bottom-section .list-inline-item:not(:last-child) {
-    margin-right: 1rem;
-  }
-
   .bottom-section .btn-dark {
     width: 100%;
-    justify-content: center;
-    padding: 1rem 2rem;
   }
 }
 
@@ -223,8 +249,7 @@
 }
 
 .error-message {
-  color: #E53E3E !important;
-  animation: fadeInUp 0.3s ease-out;
+  color: #E53E3E;
 }
 
 /* Loading button styles */
@@ -273,10 +298,7 @@
 
 /* Success message styles */
 .success-message {
-  color: #48BB78 !important;
-  animation: fadeInUp 0.3s ease-out;
-  display: flex;
-  align-items: center;
+  color: #48BB78;
 }
 
 /* Animations */
@@ -333,5 +355,68 @@
 .bottom-section .btn:disabled {
   cursor: not-allowed;
   opacity: 0.7;
+}
+
+/* Typing animation styles */
+.typing-text {
+  min-height: 120px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.typing-text span {
+  display: inline-block;
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  background-color: #7c3aed;
+  margin-left: 4px;
+  animation: blink 0.8s ease infinite;
+  vertical-align: text-top;
+  border-radius: 1px;
+  position: relative;
+  top: 4px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scaleY(0.8);
+  }
+}
+
+/* Make the gradient text effect smoother */
+.bottom-section .display-4 {
+  background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  transition: all 0.3s ease;
+}
+
+/* Add a subtle hover effect to the text */
+.typing-text:hover .cursor {
+  animation: blink 0.5s ease infinite;
 }
 

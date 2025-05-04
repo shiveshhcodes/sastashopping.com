@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import LandingPage from './pages/LandingPage';
 import HowWeWork from './pages/HowWeWork';
 import ProductsPage from './pages/Products/ProductsPage';
+import ServicesPage from './pages/Services/ServicesPage';
 import ElectronicsGadgets from './pages/Categories/ElectronicsGadgets';
 import LaptopsComputers from './pages/Categories/LaptopsComputers';
 import FashionApparel from './pages/Categories/FashionApparel';
@@ -28,6 +29,9 @@ function App() {
 
         {/* Route for the How We Work Page */}
         <Route path="/how-we-work" element={<HowWeWork />} />
+
+        {/* Route for the Services Page */}
+        <Route path="/services" element={<ServicesPage />} />
 
         {/* Route for the Products Page */}
         <Route path="/products" element={<ProductsPage />} />

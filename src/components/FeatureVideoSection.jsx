@@ -1,56 +1,51 @@
 import React from 'react';
-import { PlayCircle, Package, History, MousePointerClick } from 'lucide-react';
+import { Package, History, ArrowRight } from 'lucide-react';
 import './FeatureVideoSection.css';
 
 function FeatureVideoSection() {
   return (
     <section className="feature-section">
       <div className="feature-content">
-        {/* Left Column */}
-        <div className="feature-text">
-          <h2 className="feature-title"></h2>
-        </div>
-
-        {/* Right Column */}
-        <div className="feature-details">
+        {/* Main Content */}
+        <div className="feature-text-center">
+          <h2 className="feature-title">
+            Simply paste your product links and let us do the work.
+          </h2>
           <p className="feature-description">
-            Simply paste your product links and let us do the work. Discover the best deals across top e-commerce platforms in seconds.
+            Discover the best deals across top e-commerce platforms in seconds.
           </p>
 
           <div className="feature-boxes">
             <div className="feature-box">
-              <Package className="feature-icon" size={32} strokeWidth={1.5} />
-              <div>
+              <div className="feature-icon">
+                <Package size={24} strokeWidth={2} />
+              </div>
+              <div className="feature-info">
                 <h3>Instant Savings</h3>
                 <p>Get real-time price comparisons and save money effortlessly.</p>
               </div>
             </div>
 
             <div className="feature-box">
-              <History className="feature-icon" size={32} strokeWidth={1.5} />
-              <div>
+              <div className="feature-icon">
+                <History size={24} strokeWidth={2} />
+              </div>
+              <div className="feature-info">
                 <h3>Price History</h3>
                 <p>Track price trends to make informed purchasing decisions.</p>
               </div>
             </div>
           </div>
 
-          <div className="feature-buttons">
-            <button className="btn-start-now">
-              <MousePointerClick className="start-icon" size={32} strokeWidth={1.5} />
-              <span className="button-text">
-                <span className="button-main-text">Start Comparing Prices</span>
-                <span className="button-sub-text">Find the best deals instantly →</span>
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Video Section */}
-      <div className="video-container">
-        <div className="video-placeholder">
-          <PlayCircle size={72} className="play-icon" />
+          <button className="cta-button">
+            <div className="cta-icon">
+              <ArrowRight size={24} strokeWidth={2} />
+            </div>
+            <div className="cta-text">
+              <span className="cta-main">Start Comparing Prices</span>
+              <span className="cta-sub">Find the best deals instantly →</span>
+            </div>
+          </button>
         </div>
       </div>
     </section>

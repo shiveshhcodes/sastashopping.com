@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 // Assuming Lucide React for icons based on your dependencies
 import { Facebook, Instagram, Twitter, Linkedin, Youtube, Loader2, Check } from 'lucide-react';
@@ -10,6 +10,57 @@ function BottomSection() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [displayText, setDisplayText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const fullText = 'Start Saving on Every Purchase!!';
+  const typingSpeed = 70; // Faster typing speed (was 150)
+  const deletingSpeed = 30; // Faster deleting speed (was 50)
+  const delayBeforeDeleting = 1400; // Shorter pause before deleting (was 2000)
+  const delayBeforeTyping = 600; // Shorter pause before typing again (was 1000)
+
+  useEffect(() => {
+    let timeout;
+
+    const animateText = () => {
+      if (!isDeleting) {
+        // Typing
+        if (displayText.length < fullText.length) {
+          const nextChar = fullText[displayText.length];
+          const extraDelay = nextChar === ' ' ? 0 : // No delay for spaces
+                           nextChar === '💲' ? 200 : // Extra delay for emoji
+                           Math.random() * 40; // Random delay for natural feel
+
+          timeout = setTimeout(() => {
+            setDisplayText(fullText.slice(0, displayText.length + 1));
+          }, typingSpeed + extraDelay);
+        } else {
+          timeout = setTimeout(() => {
+            setIsDeleting(true);
+          }, delayBeforeDeleting);
+        }
+      } else {
+        // Deleting
+        if (displayText.length > 0) {
+          const extraDelay = displayText[displayText.length - 1] === ' ' ? 0 : // No delay for spaces
+                           displayText[displayText.length - 1] === '💲' ? 100 : // Extra delay for emoji
+                           Math.random() * 20; // Random delay for natural feel
+
+          timeout = setTimeout(() => {
+            setDisplayText(fullText.slice(0, displayText.length - 1));
+          }, deletingSpeed + extraDelay);
+        } else {
+          timeout = setTimeout(() => {
+            setIsDeleting(false);
+          }, delayBeforeTyping);
+        }
+      }
+    };
+
+    timeout = setTimeout(animateText, 60);
+
+    return () => clearTimeout(timeout);
+  }, [displayText, isDeleting]);
+
   const navigate = useNavigate();
 
   const createRipple = (event) => {
@@ -97,7 +148,10 @@ function BottomSection() {
       <div className="container py-5">
         <div className="row align-items-center mb-5">
           <div className="col-12 col-md-6">
-            <h2 className="display-4 fw-bold">Start Saving on Every Purchase</h2>
+            <h2 className="display-4 fw-bold typing-text">
+              {displayText}
+              <span className="cursor">|</span>
+            </h2>
           </div>
           <div className="col-12 col-md-6">
             <p className="lead mb-4">
