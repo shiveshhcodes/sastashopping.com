@@ -32,6 +32,18 @@ function getRandomAIType() {
   return aiTypes[Math.floor(Math.random() * aiTypes.length)];
 }
 
+function AnimatedEllipsis() {
+  // Simple animated ...
+  const [dotCount, setDotCount] = useState(1);
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setDotCount((c) => (c % 3) + 1);
+    }, 400);
+    return () => clearInterval(interval);
+  }, []);
+  return <span>{'.'.repeat(dotCount)}</span>;
+}
+
 function AIRecommendation() {
   const [showRec, setShowRec] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -45,14 +57,17 @@ function AIRecommendation() {
       setAIType(type);
       setProcessing(false);
       setShowRec(true);
-    }, 1800);
+    }, 2800);
   };
 
   if (processing) {
     return (
       <div className="ai-recommendation-modern d-flex align-items-center gap-3 p-4 mb-0" style={{ background: '#f8faf8', border: '1.5px solid #e0e0e0', color: '#888', fontFamily: 'inherit', minHeight: 70 }}>
         <Loader2 className="ai-spin" size={28} style={{ color: '#6c5ce7' }} />
-        <div style={{ fontWeight: 500, fontSize: '1.08rem' }}>using sastashopping ai to figure out best time to buy this product...</div>
+        <div style={{ fontWeight: 500, fontSize: '1.08rem' }}>
+          Analyzing real-time price trends and retailer data with <span style={{ color: '#6c5ce7', fontWeight: 700 }}>SastaShopping AI</span>
+          <AnimatedEllipsis />
+        </div>
       </div>
     );
   }
@@ -60,7 +75,7 @@ function AIRecommendation() {
   if (!showRec) {
     return (
       <button className="ai-recommendation-btn" onClick={handleClick}>
-        <Sparkle size={22} style={{ marginRight: 8, color: '#6c5ce7' }} /> Wanna take AI recommendation?
+        <Sparkle size={22} style={{ marginRight: 8, color: '#6c5ce7', transition: 'color 0.18s' }} /> Wanna take AI recommendation?
       </button>
     );
   }

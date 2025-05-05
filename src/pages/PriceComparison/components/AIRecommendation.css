@@ -54,6 +54,10 @@
   color: #fff;
   box-shadow: 0 4px 18px rgba(108, 92, 231, 0.13);
 }
+.ai-recommendation-btn:hover svg, .ai-recommendation-btn:focus svg {
+  color: #fff !important;
+  transition: color 0.18s;
+}
 .ai-spin {
   animation: ai-spin 1s linear infinite;
 }
