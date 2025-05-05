@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react';
 import AIRecommendation from './AIRecommendation';
-import PriceComparisonPieChart from './PriceComparisonPieChart';
 import PriceHistoryChart from './PriceHistoryChart';
-import { ThumbsUp } from 'lucide-react';
+import { ThumbsUp, ExternalLink, Star, ShoppingBag } from 'lucide-react';
 import '../styles/PriceComparisonStyles.css';
 
 function PriceComparisonResults({ results, loading, error, productUrl }) {
@@ -13,10 +12,10 @@ function PriceComparisonResults({ results, loading, error, productUrl }) {
     return (
       <div className="row text-center my-5">
         <div className="col-12">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
+          <div className="modern-spinner-container">
+            <div className="modern-spinner"></div>
           </div>
-          <p className="mt-2">Comparing prices...</p>
+          <p className="mt-3 loading-message">Fetching the best deals for you…</p>
         </div>
       </div>
     );
@@ -26,19 +25,22 @@ function PriceComparisonResults({ results, loading, error, productUrl }) {
     return (
       <div className="row my-5">
         <div className="col-12">
-          <div className="alert alert-danger" role="alert">
-            Error: {error}
+          <div className="modern-error-box">
+            <strong>Oops!</strong> {error}
           </div>
         </div>
       </div>
     );
   }
 
-  if (!results) {
+  if (!results || !results.offers || results.offers.length === 0) {
     return (
       <div className="row text-center my-5">
         <div className="col-12">
-          <p className="text-muted">Enter a product URL above to see comparison results.</p>
+          <div className="modern-error-box">
+            <strong>No results found.</strong>
+            <div className="mt-2">We couldn't find any offers for this product. Please check the link or try another product.</div>
+          </div>
         </div>
       </div>
     );
@@ -53,48 +55,73 @@ function PriceComparisonResults({ results, loading, error, productUrl }) {
 
   return (
     <>
-      {/* Product Card with Offers Table - Revamped UI */}
+      {/* Product Comparison Grid */}
       <div className="row justify-content-center mb-5">
-        <div className="col-12 col-lg-8">
-          <div className="product-main-card p-0 mb-4 d-flex flex-column flex-md-row align-items-stretch gap-0 shadow-lg border-0" style={{ overflow: 'hidden', background: '#fff', borderRadius: '2rem' }}>
-            <div className="d-flex align-items-center justify-content-center bg-light" style={{ minWidth: 200, minHeight: 220, background: '#f6f8fa', borderTopLeftRadius: '2rem', borderBottomLeftRadius: '2rem' }}>
-              <img
-                src={results.product?.imageUrl || 'https://placehold.co/160x160'}
-                alt={results.product?.name || 'Product'}
-                className="main-product-image"
-                style={{ width: 140, height: 140, objectFit: 'contain', borderRadius: '1.2rem', boxShadow: '0 2px 8px rgba(80,80,80,0.06)' }}
-              />
-            </div>
-            <div className="flex-grow-1 w-100 p-4 p-md-5 d-flex flex-column justify-content-between">
-              <h3 className="fw-bold mb-3 text-center text-md-start" style={{ fontSize: '1.7rem', color: '#2d3436' }}>{results.product?.name || 'Product Name'}</h3>
-              <div className="offers-table-wrapper mb-2">
-                <table className="table table-borderless offers-table mb-0">
-                  <thead>
-                    <tr>
-                      <th style={{ color: '#888', fontWeight: 600 }}>Retailer</th>
-                      <th style={{ color: '#888', fontWeight: 600 }}>Price</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {offers.map((offer, idx) => (
-                      <tr key={idx} style={{ background: idx % 2 === 0 ? '#f8f9fa' : '#fff' }}>
-                        <td className="fw-semibold" style={{ fontSize: '1.08rem' }}>{offer.retailer}</td>
-                        <td className="fw-bold" style={{ color: '#6c5ce7', fontSize: '1.13rem' }}>{offer.price}</td>
-                        <td>
-                          <a href={offer.url} className="btn btn-primary btn-sm px-3 rounded-pill" style={{ background: '#6c5ce7', border: 'none' }} target="_blank" rel="noopener noreferrer">View Deal</a>
-                        </td>
-                      </tr>
+        <div className="col-12">
+          <div className="comparison-grid">
+            {offers.map((offer, index) => (
+              <div key={index} className="comparison-card improved-card">
+                {/* Top Badge Area: Discount above, Retailer centered below */}
+                <div className="card-badge-column">
+                  {offer.discount && (
+                    <div className="discount-badge improved-discount">{offer.discount}% OFF</div>
+                  )}
+                  <div className={`retailer-badge improved-retailer`}>{offer.retailer}</div>
+                </div>
+                <div className="product-image-container improved-image-container">
+                  <img
+                    src={offer.imageUrl || 'https://placehold.co/200x200'}
+                    alt={offer.title || 'Product Image'}
+                    className="product-image improved-image"
+                  />
+                </div>
+                <div className="product-details improved-details">
+                  <h3 className="product-title improved-title">{offer.title || 'Product Title'}</h3>
+                  <div className="price-tag improved-price-tag">
+                    <span className="current-price improved-current-price">{offer.price}</span>
+                    {offer.originalPrice && (
+                      <span className="original-price improved-original-price">{offer.originalPrice}</span>
+                    )}
+                  </div>
+                  <div className="product-meta improved-meta">
+                    {offer.rating && (
+                      <div className="rating improved-rating">
+                        <Star size={16} className="star-icon" />
+                        <span>{offer.rating}</span>
+                      </div>
+                    )}
+                    {offer.reviews && (
+                      <div className="reviews improved-reviews">
+                        ({offer.reviews} reviews)
+                      </div>
+                    )}
+                  </div>
+                  <div className="product-features improved-features">
+                    {offer.features?.map((feature, idx) => (
+                      <div key={idx} className="feature-item improved-feature-item">
+                        <ThumbsUp size={14} />
+                        <span>{feature}</span>
+                      </div>
                     ))}
-                  </tbody>
-                </table>
+                  </div>
+                  <a
+                    href={offer.url}
+                    className="view-deal-btn improved-view-deal-btn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <ShoppingBag size={18} />
+                    <span>View Deal</span>
+                    <ExternalLink size={15} />
+                  </a>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* AI Recommendation Section - visually separated */}
+      {/* AI Recommendation Section */}
       {results.recommendation && (
         <div className="row justify-content-center mb-4">
           <div className="col-12 col-lg-8">
@@ -111,26 +138,26 @@ function PriceComparisonResults({ results, loading, error, productUrl }) {
       {results.chartData && results.chartData.length > 0 && (
         <div className="row justify-content-center mb-5">
           <div className="col-12 col-lg-10">
-            <div className="big-price-chart-container d-flex flex-column flex-md-row align-items-center gap-4 p-4 p-md-5">
-              <div className="flex-grow-1 w-100">
-                <h4 className="fw-bold mb-2">Price history</h4>
-                <PriceHistoryChart data={results.chartData} />
-              </div>
+            <div className="big-price-chart-container">
+              <h4 className="fw-bold mb-3">Price History</h4>
+              <PriceHistoryChart data={results.chartData} />
             </div>
           </div>
         </div>
       )}
 
-      {/* Sign Up for More Features Section */}
+      {/* Sign Up Section */}
       <div className="row align-items-center mb-5 justify-content-center">
         <div className="col-12 col-md-8">
-          <h5 className="fw-bold mb-1">Sign up for personalized recommendations</h5>
+          <h5 className="fw-bold mb-1">Get Personalized Price Alerts</h5>
           <p className="text-muted mb-0">
-            Create an account for price alerts and tailored suggestions.
+            Sign up to receive notifications when prices drop for your favorite products.
           </p>
         </div>
         <div className="col-12 col-md-4 text-md-end mt-3 mt-md-0">
-          <button className="btn btn-primary btn-lg price-comparison-signup-button">Get Started</button>
+          <button className="btn btn-primary btn-lg price-comparison-signup-button">
+            Sign Up Now
+          </button>
         </div>
       </div>
     </>

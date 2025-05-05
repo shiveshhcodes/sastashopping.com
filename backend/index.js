@@ -2,6 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+const morgan = require('morgan');
+const notFound = require('./middlewares/notFound');
+const errorHandler = require('./middlewares/errorHandler');
+const routes = require('./routes');
 
 // Load environment variables
 dotenv.config();
@@ -13,28 +17,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
 
 // Basic route for testing
 app.get('/', (req, res) => {
   res.json({ message: 'Server is up and running' });
 });
 
-// Error handling middleware
-app.use((req, res, next) => {
-  const error = new Error('Not Found');
-  error.status = 404;
-  next(error);
-});
+// Use global route loader
+app.use('/api/v1', routes);
 
-app.use((error, req, res, next) => {
-  res.status(error.status || 500);
-  res.json({
-    error: {
-      message: error.message || 'Internal Server Error',
-      status: error.status || 500
-    }
-  });
-});
+// Use notFound and errorHandler middlewares
+app.use(notFound);
+app.use(errorHandler);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
