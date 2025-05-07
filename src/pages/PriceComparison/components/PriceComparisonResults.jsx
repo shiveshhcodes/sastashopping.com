@@ -60,43 +60,54 @@ function PriceComparisonResults({ results, loading, error, productUrl }) {
         <div className="col-12">
           <div className="comparison-grid">
             {offers.map((offer, index) => (
-              <div key={index} className="comparison-card improved-card">
+              <div key={index} className="comparison-card improved-card" data-offer-card>
                 {/* Top Badge Area: Discount above, Retailer centered below */}
                 <div className="card-badge-column">
                   {offer.discount && (
-                    <div className="discount-badge improved-discount">{offer.discount}% OFF</div>
+                    <div className="discount-badge improved-discount" data-discount>{offer.discount}% OFF</div>
                   )}
-                  <div className={`retailer-badge improved-retailer`}>{offer.retailer}</div>
+                  {/* Brand/Retailer */}
+                  <div className={`retailer-badge improved-retailer`} data-brand>{offer.retailer}</div>
                 </div>
+                {/* Product Image */}
                 <div className="product-image-container improved-image-container">
                   <img
-                    src={offer.imageUrl || 'https://placehold.co/200x200'}
+                    src={offer.imageUrl || ''} // backend will set imageUrl
                     alt={offer.title || 'Product Image'}
                     className="product-image improved-image"
+                    data-image
                   />
                 </div>
                 <div className="product-details improved-details">
-                  <h3 className="product-title improved-title">{offer.title || 'Product Title'}</h3>
+                  {/* Product Title */}
+                  <h3 className="product-title improved-title" data-title>{offer.title}</h3>
+                  {/* Category (optional, backend to fill) */}
+                  {offer.category && (
+                    <div className="product-category" data-category>{offer.category}</div>
+                  )}
+                  {/* Price Section */}
                   <div className="price-tag improved-price-tag">
-                    <span className="current-price improved-current-price">{offer.price}</span>
+                    <span className="current-price improved-current-price" data-price>{offer.price}</span>
                     {offer.originalPrice && (
-                      <span className="original-price improved-original-price">{offer.originalPrice}</span>
+                      <span className="original-price improved-original-price" data-original-price>{offer.originalPrice}</span>
                     )}
                   </div>
+                  {/* Ratings and Reviews */}
                   <div className="product-meta improved-meta">
                     {offer.rating && (
-                      <div className="rating improved-rating">
+                      <div className="rating improved-rating" data-rating>
                         <Star size={16} className="star-icon" />
                         <span>{offer.rating}</span>
                       </div>
                     )}
                     {offer.reviews && (
-                      <div className="reviews improved-reviews">
+                      <div className="reviews improved-reviews" data-reviews>
                         ({offer.reviews} reviews)
                       </div>
                     )}
                   </div>
-                  <div className="product-features improved-features">
+                  {/* Features/Description */}
+                  <div className="product-features improved-features" data-features>
                     {offer.features?.map((feature, idx) => (
                       <div key={idx} className="feature-item improved-feature-item">
                         <ThumbsUp size={14} />
@@ -104,11 +115,13 @@ function PriceComparisonResults({ results, loading, error, productUrl }) {
                       </div>
                     ))}
                   </div>
+                  {/* View Deal Button */}
                   <a
                     href={offer.url}
                     className="view-deal-btn improved-view-deal-btn"
                     target="_blank"
                     rel="noopener noreferrer"
+                    data-view-deal-btn
                   >
                     <ShoppingBag size={18} />
                     <span>View Deal</span>
