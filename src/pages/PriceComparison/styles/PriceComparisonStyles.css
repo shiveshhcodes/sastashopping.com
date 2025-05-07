@@ -622,12 +622,12 @@
 }
 
 .improved-title {
-  font-size: 1.18rem;
+  font-size: 1.45rem;
   font-weight: 800;
   color: #23213a;
-  margin-bottom: 0.7rem;
+  margin-bottom: 0.3rem;
   line-height: 1.35;
-  min-height: 2.6em;
+  min-height: 1.6em;
 }
 
 .improved-price-tag {
@@ -638,7 +638,7 @@
 }
 
 .improved-current-price {
-  font-size: 1.45rem;
+  font-size: 1.55rem;
   font-weight: 800;
   color: #6c5ce7;
 }
