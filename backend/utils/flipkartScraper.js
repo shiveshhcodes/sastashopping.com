@@ -360,7 +360,7 @@ async function searchFlipkart(query) {
       const bodyContent = await page.content();
       if (bodyContent.toLowerCase().includes("no results found for") || bodyContent.toLowerCase().includes("couldn't find any products")) {
           console.log(`No search results found on Flipkart for query: "${query}"`);
-          return null;
+          return [];
       }
       throw new Error(`Could not find search results container or items on Flipkart for query "${query}".`);
     }
@@ -384,11 +384,11 @@ async function searchFlipkart(query) {
       }).filter(item => item.title && item.link);
     }, searchResultItemSelector);
     
-    return results.length > 0 ? results[0] : null;
+    return Array.isArray(results) ? results : [];
 
   } catch (error) {
     console.error(`Flipkart search error for query "${query}":`, error.message);
-    return null; 
+    return [];
   } finally {
     if (browser) {
       await browser.close();

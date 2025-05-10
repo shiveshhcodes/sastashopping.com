@@ -474,14 +474,14 @@ async function searchAmazon(query) {
       'Upgrade-Insecure-Requests': '1',
       'Sec-Fetch-Dest': 'document',
       'Sec-Fetch-Mode': 'navigate',
-      'Sec-Fetch-Site': 'cross-site', // Often 'cross-site' when coming from a search
+      'Sec-Fetch-Site': 'cross-site',
       'Sec-Fetch-User': '?1',
       'Sec-Ch-Ua': '"Google Chrome";v="123", "Not:A-Brand";v="8", "Chromium";v="123"',
       'Sec-Ch-Ua-Mobile': '?0',
       'Sec-Ch-Ua-Platform': '"Windows"'
     });
 
-    const searchUrl = `https://www.amazon.in/s?k=${encodeURIComponent(query)}&ref=nb_sb_noss`; // Added ref for more natural search
+    const searchUrl = `https://www.amazon.in/s?k=${encodeURIComponent(query)}&ref=nb_sb_noss`;
 
     await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 2000));
     await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 90000 });
@@ -493,7 +493,7 @@ async function searchAmazon(query) {
     
     const searchResultsSelector = 'div.s-main-slot div[data-component-type="s-search-result"]';
     try {
-      await page.waitForSelector(searchResultsSelector, { timeout: 25000, visible: true }); // Increased timeout
+      await page.waitForSelector(searchResultsSelector, { timeout: 25000, visible: true });
     } catch (e) {
       const bodyText = await page.evaluate(() => document.body.innerText);
       if (bodyText.includes('Enter the characters you see below') || bodyText.includes('Sorry, we just need to make sure you\'re not a robot') || bodyText.includes('CAPTCHA')) {
@@ -501,9 +501,8 @@ async function searchAmazon(query) {
       }
       if (bodyText.includes('No results for') || bodyText.includes('did not match any products')) {
         console.log(`No results found on Amazon for query: "${query}"`);
-        return null;
+        return [];
       }
-       // if (page) await page.screenshot({ path: `error_search_results_not_found_${Date.now()}.png` });
       throw new Error('Could not find search results on Amazon. Page structure may have changed or CAPTCHA present.');
     }
 
@@ -511,7 +510,7 @@ async function searchAmazon(query) {
       const items = Array.from(document.querySelectorAll(itemSelector)).slice(0, 5);
       return items.map(item => {
         let title = '';
-        const linkEl = item.querySelector('h2 a.a-link-normal, h2 a.s-link-style, h2 a[class*="s-link-style"]'); // More specific link selectors
+        const linkEl = item.querySelector('h2 a.a-link-normal, h2 a.s-link-style, h2 a[class*="s-link-style"]');
 
         if (linkEl) {
           // Attempt 1: Specific span known for titles
@@ -638,11 +637,10 @@ async function searchAmazon(query) {
       }).filter(item => item.link && item.title && item.title !== 'N/A' && item.title !== '...');
     }, searchResultsSelector);
 
-    return results.length > 0 ? results[0] : null;
+    return Array.isArray(results) ? results : [];
   } catch (error) {
     console.error(`Error in searchAmazon for query "${query}":`, error.message);
-    // if (page) await page.screenshot({ path: `error_search_${Date.now()}.png` });
-    return null;
+    return [];
   } finally {
     if (browser) {
       await browser.close();
