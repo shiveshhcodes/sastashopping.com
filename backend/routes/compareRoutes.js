@@ -104,10 +104,9 @@ router.post('/', async (req, res) => {
     // 4. Map to offers array for frontend
     const offers = ['flipkart', 'amazon', 'myntra']
       .map(platform => {
-        if (platform === 'amazon') {
-          return mapToOffer(platform, matches[platform], amazonSearch);
-        }
-        return mapToOffer(platform, matches[platform]);
+        const offer = mapToOffer(platform, matches[platform], platform === 'amazon' ? amazonSearch : null);
+        if (offer) offer.platform = platform; // Ensure platform field is set
+        return offer;
       })
       .filter(Boolean);
 
