@@ -1,10 +1,20 @@
 // Error handling middleware
-module.exports = (error, req, res, next) => {
-  res.status(error.status || 500);
-  res.json({
-    error: {
-      message: error.message || 'Internal Server Error',
-      status: error.status || 500
-    }
+const logger = require('../utils/logger');
+
+const errorHandler = (err, req, res, next) => {
+  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  
+  logger.error({
+    message: err.message,
+    stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack,
+    path: req.path,
+    method: req.method
   });
-}; 
+
+  res.status(statusCode).json({
+    message: err.message,
+    stack: process.env.NODE_ENV === 'production' ? null : err.stack
+  });
+};
+
+module.exports = errorHandler; 

@@ -387,4 +387,3 @@ async function searchMyntra(query) {
 }
 
 module.exports = { scrapeMyntra, searchMyntra };
-

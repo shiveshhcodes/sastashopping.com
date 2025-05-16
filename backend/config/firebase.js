@@ -1,8 +1,15 @@
-const admin = require('firebase-admin');
-const serviceAccount = require('./firebaseServiceAccountKey.json');
+// Mock Firebase admin for development
+const mockAdmin = {
+  auth: () => ({
+    verifyIdToken: async (token) => {
+      // Mock user data
+      return {
+        uid: 'mock-user-id',
+        email: 'test@example.com',
+        name: 'Test User'
+      };
+    }
+  })
+};
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
-
-module.exports = admin; 
+module.exports = mockAdmin; 

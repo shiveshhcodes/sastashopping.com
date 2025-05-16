@@ -266,12 +266,29 @@ function structureComparisonOutput({ productName, sourcePlatform, matches }) {
     const platforms = ['amazon', 'flipkart', 'myntra'];
     const comparison = platforms.map(platform => {
       const match = matches[platform];
+      // Ensure image URL is properly formatted and validated
+      let imageUrl = match?.image || '';
+      if (imageUrl) {
+        try {
+          // Ensure URL is absolute
+          if (!imageUrl.startsWith('http')) {
+            imageUrl = new URL(imageUrl, 'https://' + platform + '.com').href;
+          }
+          // Validate URL
+          new URL(imageUrl);
+        } catch (e) {
+          imageUrl = 'https://placehold.co/100x100/eee/ccc?text=No+Image';
+        }
+      } else {
+        imageUrl = 'https://placehold.co/100x100/eee/ccc?text=No+Image';
+      }
+
       return {
         platform,
         price: match?.price ? formatPrice(match.price) : 'Not Available',
         title: match?.title ? cleanText(match.title) : 'N/A',
         link: match?.link || 'N/A',
-        image: match?.image || 'https://placehold.co/100x100/eee/ccc?text=No+Image',
+        image: imageUrl,
         brand: match?.brand ? cleanText(match.brand) : 'N/A',
         rating: match?.rating || 'N/A',
         reviews: match?.reviews || 'N/A'
