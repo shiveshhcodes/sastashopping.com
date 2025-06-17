@@ -31,17 +31,45 @@ const usePriceComparison = (initialUrl = '') => {
         return;
       }
 
-      const response = await fetch('http://localhost:5050/api/v1/compare', {
+      // First, get the product details from the URL
+      const productResponse = await fetch('http://localhost:5050/api/v1/products', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        credentials: 'include',
         body: JSON.stringify({ url })
       });
+
+      if (!productResponse.ok) {
+        const errData = await productResponse.json();
+        throw new Error(errData.error || 'Failed to fetch product details');
+      }
+
+      const productData = await productResponse.json();
+      
+      // Now send the product data to the comparison service
+      const response = await fetch('http://localhost:5050/api/v1/compare', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          products: [productData],
+          searchQuery: productData.title
+        })
+      });
+
       if (!response.ok) {
         const errData = await response.json();
         throw new Error(errData.error || 'Failed to fetch comparison results');
       }
+
       const data = await response.json();
-      setResults({ offers: data.offers });
+      setResults(data);
     } catch (err) {
       setError(err.message || 'Failed to compare prices. Please try again.');
     } finally {

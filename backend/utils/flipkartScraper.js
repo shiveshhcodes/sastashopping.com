@@ -1,4 +1,28 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+const logger = require('./logger');
+const { createStandardProductObject } = require('./featureExtractor');
+
+// Use stealth plugin
+puppeteer.use(StealthPlugin());
+
+// Modern user agents
+const userAgents = [
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2.1 Safari/605.1.15',
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0'
+];
+
+// Helper function to get random user agent
+const getRandomUserAgent = () => userAgents[Math.floor(Math.random() * userAgents.length)];
+
+// Helper function to add random delay
+const randomDelay = async (min = 1000, max = 3000) => {
+  const delay = Math.floor(Math.random() * (max - min + 1)) + min;
+  await new Promise(resolve => setTimeout(resolve, delay));
+};
 
 /**
  * Scrapes product data from a given Flipkart product URL.
@@ -7,324 +31,174 @@ const puppeteer = require('puppeteer');
  */
 async function scrapeFlipkart(url) {
   let browser;
-  let page;
-
   try {
     browser = await puppeteer.launch({
       headless: 'new',
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--disable-gpu',
-        '--window-size=1920,1080'
-      ]
+        '--disable-infobars',
+        '--window-size=1920,1080',
+        '--incognito',
+        '--disable-blink-features=AutomationControlled'
+      ],
+      ignoreHTTPSErrors: true
     });
 
-    page = await browser.newPage();
-    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36');
+    const page = await browser.newPage();
+    
+    // Set modern viewport
     await page.setViewport({ width: 1920, height: 1080 });
-
+    
+    // Set random user agent
+    await page.setUserAgent(getRandomUserAgent());
+    
+    // Set extra headers
     await page.setExtraHTTPHeaders({
-      'Accept-Language': 'en-US,en;q=0.9,en-IN;q=0.8',
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Connection': 'keep-alive',
+      'Upgrade-Insecure-Requests': '1',
+      'Sec-Fetch-Dest': 'document',
+      'Sec-Fetch-Mode': 'navigate',
+      'Sec-Fetch-Site': 'none',
+      'Sec-Fetch-User': '?1'
     });
 
-    await page.setRequestInterception(true);
-    page.on('request', (req) => {
-      const blockList = ['google-analytics.com', 'googletagmanager.com', 'facebook.net', 'flipkartads.com'];
-      if (
-        blockList.some(domain => req.url().includes(domain)) ||
-        ['font', 'media'].includes(req.resourceType())
-      ) {
-        req.abort();
-      } else {
-        req.continue();
-      }
+    // Enable JavaScript
+    await page.setJavaScriptEnabled(true);
+
+    // Navigate to the URL with increased timeout
+    await page.goto(url, { 
+      waitUntil: 'networkidle0',
+      timeout: 60000 
     });
 
-    await page.goto(url, { waitUntil: 'networkidle2', timeout: 80000 });
+    // Add random delay to mimic human behavior
+    await randomDelay();
 
-    const closeButtonSelector = 'button._2KpZ6l._2doB4z';
-    if (await page.$(closeButtonSelector)) {
-      try {
-        await page.click(closeButtonSelector);
-        await new Promise(resolve => setTimeout(resolve, 2000));
-;
-        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 3));
-        await new Promise(resolve => setTimeout(resolve, 2000));
-;
-      } catch (e) {
-        console.warn("Popup close failed, continuing...");
-      }
-    }
-
-    // --- Wait for key product elements to be present ---
-    const essentialSelectors = [
-      'div[class*="_30jeq3"]', // Price
-      '._2WkVRV',              // Brand
-      '._2418kt li',           // Features
-      'div._3LWZlK'            // Rating
+    // Wait for key elements with increased timeout and multiple selectors
+    const selectors = [
+      'span.B_NuCI',
+      'h1._2i1QSc',
+      'h1._3eAQiD',
+      'h1[class*="_2i1QSc"]',
+      'span[class*="B_NuCI"]',
+      'h1[class*="_3eAQiD"]'
     ];
-    for (const sel of essentialSelectors) {
+
+    let titleElement = null;
+    for (const selector of selectors) {
       try {
-        await page.waitForSelector(sel, { timeout: 10000 });
-      } catch (_) {}
+        titleElement = await page.waitForSelector(selector, { 
+          timeout: 30000,
+          visible: true 
+        });
+        if (titleElement) break;
+      } catch (e) {
+        continue;
+      }
     }
 
-    // --- Scrape data from the page ---
+    if (!titleElement) {
+      throw new Error('Could not find product title element');
+    }
+
+    // Add another random delay before scraping
+    await randomDelay(500, 1500);
+
     const data = await page.evaluate(() => {
-      // Helper for multiple selectors
       const getText = (selectors) => {
-        for (const sel of selectors) {
-          const el = document.querySelector(sel);
-          if (el && el.textContent && el.offsetHeight > 0 && el.offsetWidth > 0) {
-            return el.textContent.trim();
-          }
+        for (const selector of selectors) {
+          const el = document.querySelector(selector);
+          if (el && el.textContent) return el.textContent.trim();
         }
         return '';
       };
 
-      // --- JSON-LD Extraction ---
-      const getJsonLdData = () => {
-        const scripts = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
-        for (const script of scripts) {
-          try {
-            let jsonData = JSON.parse(script.textContent);
-            if (Array.isArray(jsonData)) {
-              const productGraph = jsonData.find(item => item['@graph'] && Array.isArray(item['@graph']));
-              if (productGraph) {
-                const productInGraph = productGraph['@graph'].find(item => item['@type'] === 'Product');
-                if(productInGraph) return productInGraph;
-              }
-              const productDirect = jsonData.find(item => item['@type'] === 'Product');
-              if (productDirect) return productDirect;
-            } else if (jsonData['@type'] === 'Product') {
-              return jsonData;
-            } else if (jsonData['@graph'] && Array.isArray(jsonData['@graph'])) {
-              const productInGraph = jsonData['@graph'].find(item => item['@type'] === 'Product');
-              if(productInGraph) return productInGraph;
-            }
-          } catch (e) { /* Ignore parsing errors */ }
+      const getImage = (selectors) => {
+        for (const selector of selectors) {
+          const el = document.querySelector(selector);
+          if (el && el.src) return el.src;
         }
-        return null;
+        return '';
       };
-      const jsonLd = getJsonLdData();
 
-      // --- Brand ---
-      const brandSelectors = [
-        '._2WkVRV',
-        '._1rcHFq',
-        '._3yka2h',
-        'meta[itemprop="brand"]',
-        '.B_NuCI span',
-        '.aMaAEs ._2whKao',
-      ];
-      let brand = '';
-      if (jsonLd && jsonLd.brand && jsonLd.brand.name) {
-        brand = jsonLd.brand.name.replace(/\s\s+/g, ' ').trim();
-      }
-      if (!brand) {
-        brand = getText(brandSelectors);
-      }
-      if (!brand) {
-        const metaBrand = document.querySelector('meta[itemprop="brand"]');
-        if (metaBrand && metaBrand.content) brand = metaBrand.content.trim();
-      }
-      if (!brand) brand = '';
-
-      // --- Title ---
-      const titleSelectors = [
+      // Get title with multiple selectors
+      const title = getText([
         'span.B_NuCI',
-        '._35KyD6',
-        '._3eAQiD',
-        '._2FEgIe span',
-        'h1._3qQ9m1',
-        '._1YokD2 h1',
-        '._7eCyvZ',
-        '._2whKao',
-        '._2J4zcy',
-        '._1YokD2 .B_NuCI',
-        'meta[property="og:title"]',
+        'h1._2i1QSc',
+        'h1._3eAQiD',
+        'h1[class*="_2i1QSc"]',
+        'span[class*="B_NuCI"]',
+        'h1[class*="_3eAQiD"]'
+      ]);
+
+      // Get price with multiple selectors
+      const price = getText([
+        'div._30jeq3._16Jk6d',
+        'div._1vC4OE._3qQ9m1',
+        'div._25b18c',
+        'div[class*="_30jeq3"]',
+        'div[class*="_1vC4OE"]',
+        'div[class*="_25b18c"]'
+      ]);
+
+      // Get description with multiple selectors
+      const description = getText([
+        'div._3ezVUc',
+        'div._3la3Fn',
+        'div._3khuHA',
+        'div[class*="_3ezVUc"]',
+        'div[class*="_3la3Fn"]',
+        'div[class*="_3khuHA"]'
+      ]);
+
+      // Get image with multiple selectors
+      const image = getImage([
+        'img._396cs4',
+        'img._2r_T1I',
+        'img._1BweB8',
+        'img[class*="_396cs4"]',
+        'img[class*="_2r_T1I"]',
+        'img[class*="_1BweB8"]'
+      ]);
+
+      // Get additional features with multiple selectors
+      const features = {};
+      const featureSelectors = [
+        'div._3ezVUc li',
+        'div._3la3Fn li',
+        'div._3khuHA li',
+        'div[class*="_3ezVUc"] li',
+        'div[class*="_3la3Fn"] li',
+        'div[class*="_3khuHA"] li'
       ];
-      let rawTitle = '';
-      if (jsonLd && jsonLd.name) {
-        rawTitle = jsonLd.name.replace(/\s\s+/g, ' ').trim();
-      }
-      if (!rawTitle) {
-        for (const sel of titleSelectors) {
-          let t = '';
-          if (sel.startsWith('meta')) {
-            const el = document.querySelector(sel);
-            if (el && el.content) t = el.content.trim();
-          } else {
-            const el = document.querySelector(sel);
-            if (el && el.textContent) t = el.textContent.trim();
-          }
-          if (t) {
-            rawTitle = t;
-            break;
-          }
-        }
-      }
-      if (!rawTitle) rawTitle = '';
-      let productName = rawTitle;
-      if (productName) {
-        productName = productName.replace(/\s*Online at Best Price On Flipkart\.com.*/i, '').trim();
-        productName = productName.replace(/\s*\|.*$/i, '').trim();
-        productName = productName.replace(/\s*Buy .+? on Flipkart.*/i, '').trim();
-      }
-      if (brand && productName.toLowerCase().startsWith(brand.toLowerCase())) {
-        productName = productName.substring(brand.length).trim();
-      }
-      let title = brand && productName ? `${brand} ${productName}`.trim() : (productName || brand);
-      title = title.trim();
-      title = title.split(/\s+/).slice(0, 8).join(' ');
 
-      // --- Price ---
-      let price = '';
-      if (jsonLd && jsonLd.offers) {
-        const offer = Array.isArray(jsonLd.offers) ? jsonLd.offers[0] : jsonLd.offers;
-        if (offer && (offer.price || offer.lowPrice)) {
-          price = offer.price || offer.lowPrice;
+      for (const selector of featureSelectors) {
+        const featureBullets = document.querySelectorAll(selector);
+        if (featureBullets.length > 0) {
+          features.bulletPoints = Array.from(featureBullets)
+            .map(li => li.textContent.trim())
+            .filter(text => text && !text.includes('Click here'));
+          break;
         }
       }
-      if (!price) {
-        const priceSelectors = [
-          'div._30jeq3._16Jk6d',
-          'div._30jeq3',
-          'div._1vC4OE._3qQ9m1',
-          'span._3I9_wc._2p6lqe',
-          'div[class*="_30jeq3"]',
-          '._16Jk6d',
-          '._25b18c ._30jeq3',
-          '._1vC4OE',
-          'div._3I9_wc',
-          'div._2twTWD span',
-          'div._1vC4OE._3qQ9m1',
-          'div._2Ix0io',
-          'meta[itemprop="price"]',
-        ];
-        for (const sel of priceSelectors) {
-          const el = document.querySelector(sel);
-          if (el && el.textContent) {
-            const match = el.textContent.replace(/,/g, '').match(/\d{3,}/);
-            if (match && match[0]) {
-              price = match[0];
-              break;
-            }
-          }
-        }
-        if (!price) {
-          const metaPrice = document.querySelector('meta[itemprop="price"]');
-          if (metaPrice && metaPrice.content) price = metaPrice.content.replace(/[^\d]/g, '');
-        }
-      }
-      if (price && !isNaN(parseFloat(price))) {
-        price = `₹${parseFloat(price).toFixed(0)}`;
-      } else {
-        price = '';
-      }
-
-      // --- Image ---
-      let image = '';
-      if (jsonLd && jsonLd.image) {
-        image = Array.isArray(jsonLd.image) ? jsonLd.image[0] : jsonLd.image;
-      }
-      if (!image) {
-        const mainImg = document.querySelector('img._396cs4._2amPTt._3qGmMb, img._2r_T1I._396cs4');
-        if (mainImg && mainImg.src) {
-          image = mainImg.src;
-        } else {
-          const galleryImg = document.querySelector('._2E1FGS img, .q6DClP img');
-          if (galleryImg && galleryImg.src) image = galleryImg.src;
-          if (!image) {
-            const singleImg = document.querySelector('img._396cs4');
-            if (singleImg && singleImg.src) image = singleImg.src;
-          }
-          if (!image) {
-            const metaImg = document.querySelector('meta[property="og:image"]');
-            if (metaImg && metaImg.content) image = metaImg.content;
-          }
-        }
-      }
-      if (image && !image.startsWith('http')) {
-        try { image = new URL(image, document.baseURI).href; } catch(e) { image = ''; }
-      }
-      if (!image) image = '';
-
-      // --- Category ---
-      let category = '';
-      if (jsonLd && jsonLd.category) {
-        category = typeof jsonLd.category === 'string' ? jsonLd.category.split('>').pop().trim() : '';
-      }
-      if (!category) {
-        const categorySelectors = [
-          'div._1MR4o5 > div > a:nth-child(3)',
-          'div._1MR4o5 > div > a:last-child',
-          '.breadcrumb li:nth-child(3)',
-          '.row ._21Ahn-',
-          'meta[property="og:category"]',
-          'a._2whKao',
-          '._2whKao',
-        ];
-        for (const sel of categorySelectors) {
-          let el = null;
-          if (sel.startsWith('meta')) {
-            el = document.querySelector(sel);
-            if (el && el.content) {
-              category = el.content.trim();
-              break;
-            }
-          } else {
-            el = document.querySelector(sel);
-            if (el && el.textContent) {
-              category = el.textContent.trim();
-              break;
-            }
-          }
-        }
-      }
-      if (!category) category = '';
-
-      // --- Rating & Reviews ---
-      let rating = '';
-      let reviews = '';
-      if (jsonLd && jsonLd.aggregateRating) {
-        if (jsonLd.aggregateRating.ratingValue) rating = jsonLd.aggregateRating.ratingValue.toString();
-        if (jsonLd.aggregateRating.reviewCount || jsonLd.aggregateRating.ratingCount) {
-          reviews = (jsonLd.aggregateRating.reviewCount || jsonLd.aggregateRating.ratingCount).toString();
-        }
-      }
-      if (!rating) {
-        const ratingSels = ['div._3LWZlK', 'span._1lRcqv ._3LWZlK', 'div._2d4LTz'];
-        rating = getText(ratingSels) || '';
-      }
-      if (!reviews) {
-        const reviewsSels = ['span._2_R_DZ', 'span._13vcmD span:last-child'];
-        const reviewsText = getText(reviewsSels);
-        if (reviewsText) reviews = reviewsText.replace(/\D/g, '') || '';
-      }
-      if (rating && !rating.includes('/')) rating = `${parseFloat(rating).toFixed(1)}`;
-      if (!rating) rating = '';
-      if (!reviews) reviews = '';
 
       return {
         title,
-        brand,
         price,
-        category,
-        image,
-        rating,
-        reviews
+        description,
+        imageUrl: image,
+        additionalFeatures: features
       };
     });
 
-    return data;
+    return createStandardProductObject(data, 'flipkart');
 
   } catch (error) {
-    console.error(`Error scraping Flipkart product: ${error.message}`);
+    logger.error('Error scraping Flipkart product:', error);
     throw error;
   } finally {
     if (browser) await browser.close();
@@ -342,52 +216,158 @@ async function searchFlipkart(query) {
   try {
     browser = await puppeteer.launch({
       headless: 'new',
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-infobars',
+        '--window-size=1920,1080',
+        '--incognito',
+        '--disable-blink-features=AutomationControlled'
+      ],
+      ignoreHTTPSErrors: true
     });
+
     page = await browser.newPage();
-    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36');
+    
+    // Set modern viewport
+    await page.setViewport({ width: 1920, height: 1080 });
+    
+    // Set random user agent
+    await page.setUserAgent(getRandomUserAgent());
+    
+    // Set extra headers
+    await page.setExtraHTTPHeaders({
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Connection': 'keep-alive',
+      'Upgrade-Insecure-Requests': '1',
+      'Sec-Fetch-Dest': 'document',
+      'Sec-Fetch-Mode': 'navigate',
+      'Sec-Fetch-Site': 'none',
+      'Sec-Fetch-User': '?1'
+    });
+
+    // Enable JavaScript
+    await page.setJavaScriptEnabled(true);
     
     const searchUrl = `https://www.flipkart.com/search?q=${encodeURIComponent(query)}&otracker=search`;
-    await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 60000 });
+    await page.goto(searchUrl, { 
+      waitUntil: 'networkidle0',
+      timeout: 60000 
+    });
 
-    const searchResultItemSelector = 'div._1AtVbE, div._2kHMtA, div[data-id], ._1xHGtK._373qXS, ._4ddWXP';
-    const searchResultsContainerSelector = 'div._1YokD2._3Mn1Gg, div#container, ._1HmYoV._35HD7C';
+    // Add random delay to mimic human behavior
+    await randomDelay();
 
-    try {
-      await page.waitForSelector(searchResultsContainerSelector, { timeout: 15000, visible: true });
-      await page.waitForSelector(searchResultItemSelector, { timeout: 10000, visible: true });
-    } catch (e) {
-      const bodyContent = await page.content();
-      if (bodyContent.toLowerCase().includes("no results found for") || bodyContent.toLowerCase().includes("couldn't find any products")) {
-          console.log(`No search results found on Flipkart for query: "${query}"`);
-          return [];
+    const searchResultItemSelectors = [
+      'div._1AtVbE',
+      'div._2kHMtA',
+      'div[data-id]',
+      '._1xHGtK._373qXS',
+      '._4ddWXP',
+      'div[class*="_1AtVbE"]',
+      'div[class*="_2kHMtA"]',
+      'div[class*="_1xHGtK"]',
+      'div[class*="_4ddWXP"]'
+    ];
+
+    const searchResultsContainerSelectors = [
+      'div._1YokD2._3Mn1Gg',
+      'div#container',
+      '._1HmYoV._35HD7C',
+      'div[class*="_1YokD2"]',
+      'div[class*="_3Mn1Gg"]',
+      'div[class*="_1HmYoV"]'
+    ];
+
+    let containerFound = false;
+    for (const selector of searchResultsContainerSelectors) {
+      try {
+        await page.waitForSelector(selector, { 
+          timeout: 30000,
+          visible: true 
+        });
+        containerFound = true;
+        break;
+      } catch (e) {
+        continue;
       }
-      throw new Error(`Could not find search results container or items on Flipkart for query "${query}".`);
     }
 
-    const results = await page.evaluate((itemSelector) => {
-      const items = Array.from(document.querySelectorAll(itemSelector)).slice(0, 5);
+    if (!containerFound) {
+      const bodyContent = await page.content();
+      if (bodyContent.toLowerCase().includes("no results found for") || 
+          bodyContent.toLowerCase().includes("couldn't find any products")) {
+        logger.info(`No search results found on Flipkart for query: "${query}"`);
+        return [];
+      }
+      throw new Error(`Could not find search results container on Flipkart for query "${query}".`);
+    }
+
+    // Add another random delay before scraping
+    await randomDelay(500, 1500);
+
+    const results = await page.evaluate((selectors) => {
+      const items = [];
+      for (const selector of selectors) {
+        const elements = document.querySelectorAll(selector);
+        if (elements.length > 0) {
+          items.push(...Array.from(elements).slice(0, 5));
+          break;
+        }
+      }
+
       return items.map(item => {
-        const titleEl = item.querySelector('a.s1Q9rs, div._4rR01T, a.IRpwTa');
-        const title = titleEl?.title || titleEl?.textContent.trim() || '';
+        const titleSelectors = ['a.s1Q9rs', 'div._4rR01T', 'a.IRpwTa', 'a[class*="s1Q9rs"]', 'div[class*="_4rR01T"]'];
+        const linkSelectors = ['a[href*="/p/"]', 'a[href*="flipkart.com"]'];
+        const priceSelectors = ['div._30jeq3', 'div._1vC4OE', 'div[class*="_30jeq3"]', 'div[class*="_1vC4OE"]'];
+        const imageSelectors = ['img._396cs4', '._2r_T1I', '.CXW8mj img', 'img[class*="_396cs4"]', 'img[class*="_2r_T1I"]'];
 
-        const linkEl = item.querySelector('a[href*="/p/"]');
-        const link = linkEl ? new URL(linkEl.href, document.baseURI).href : '';
+        let title = '';
+        for (const selector of titleSelectors) {
+          const el = item.querySelector(selector);
+          if (el) {
+            title = el.title || el.textContent.trim();
+            break;
+          }
+        }
 
-        const priceEl = item.querySelector('div._30jeq3, div._1vC4OE');
-        const price = priceEl ? priceEl.textContent.replace(/[^\d]/g, '') : '';
+        let link = '';
+        for (const selector of linkSelectors) {
+          const el = item.querySelector(selector);
+          if (el) {
+            link = new URL(el.href, document.baseURI).href;
+            break;
+          }
+        }
 
-        const imgEl = item.querySelector('img._396cs4, ._2r_T1I, .CXW8mj img');
-        const image = imgEl ? new URL(imgEl.src, document.baseURI).href : '';
+        let price = '';
+        for (const selector of priceSelectors) {
+          const el = item.querySelector(selector);
+          if (el) {
+            price = el.textContent.replace(/[^\d]/g, '');
+            break;
+          }
+        }
+
+        let image = '';
+        for (const selector of imageSelectors) {
+          const el = item.querySelector(selector);
+          if (el) {
+            image = new URL(el.src, document.baseURI).href;
+            break;
+          }
+        }
 
         return { title, price, image, link };
       }).filter(item => item.title && item.link);
-    }, searchResultItemSelector);
+    }, searchResultItemSelectors);
     
     return Array.isArray(results) ? results : [];
 
   } catch (error) {
-    console.error(`Flipkart search error for query "${query}":`, error.message);
+    logger.error(`Flipkart search error for query "${query}":`, error);
     return [];
   } finally {
     if (browser) {
@@ -396,4 +376,53 @@ async function searchFlipkart(query) {
   }
 }
 
-module.exports = { scrapeFlipkart, searchFlipkart };
+async function searchAndScrapeList(searchQuery) {
+  let browser;
+  try {
+    browser = await puppeteer.launch({
+      headless: 'new',
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+    const page = await browser.newPage();
+    
+    // Set viewport and user agent
+    await page.setViewport({ width: 1280, height: 800 });
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+
+    // Navigate to search results
+    const searchUrl = `https://www.flipkart.com/search?q=${encodeURIComponent(searchQuery)}`;
+    await page.goto(searchUrl, { waitUntil: 'networkidle0', timeout: 30000 });
+
+    // Wait for search results
+    await page.waitForSelector('div._1AtVbE', { timeout: 10000 });
+
+    const products = await page.evaluate(() => {
+      const items = Array.from(document.querySelectorAll('div._1AtVbE')).slice(0, 5);
+      
+      return items.map(item => {
+        const titleEl = item.querySelector('div._4rR01T, a.s1Q9rs');
+        const priceEl = item.querySelector('div._30jeq3._1_WHN1');
+        const imageEl = item.querySelector('img._396cs4');
+        const linkEl = item.querySelector('a._1fQZEK, a.s1Q9rs');
+
+        return {
+          title: titleEl ? titleEl.textContent.trim() : '',
+          price: priceEl ? priceEl.textContent.trim() : '',
+          imageUrl: imageEl ? imageEl.src : '',
+          url: linkEl ? `https://www.flipkart.com${linkEl.href}` : '',
+          description: '' // Search results don't have descriptions
+        };
+      }).filter(item => item.title && item.price);
+    });
+
+    return products.map(product => createStandardProductObject(product, 'flipkart'));
+
+  } catch (error) {
+    logger.error('Error searching Flipkart:', error);
+    throw error;
+  } finally {
+    if (browser) await browser.close();
+  }
+}
+
+module.exports = { scrapeFlipkart, searchFlipkart, searchAndScrapeList };

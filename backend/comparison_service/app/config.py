@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 # Service configuration
 SERVICE_HOST = os.getenv('COMPARISON_SERVICE_HOST', '0.0.0.0')
-SERVICE_PORT = int(os.getenv('COMPARISON_SERVICE_PORT', 8000))
+SERVICE_PORT = int(os.getenv('COMPARISON_SERVICE_PORT', 5051))
 
 # Scraping configuration
 SCRAPING_TIMEOUT = int(os.getenv('SCRAPING_TIMEOUT', 15))  # Increased timeout

@@ -5,6 +5,65 @@ const { scrapeAmazon, searchAmazon } = require('./amazonScraper');
 const { scrapeFlipkart, searchFlipkart } = require('./flipkartScraper');
 const { scrapeMyntra, searchMyntra } = require('./myntraScraper');
 const { generateSearchQuery, findBestMatch, structureComparisonOutput } = require('./helpers');
+const config = require('../config/config');
+const logger = require('./logger');
+
+// Rate limiting configuration
+const rateLimits = {
+  amazon: { requests: 0, lastReset: Date.now() },
+  flipkart: { requests: 0, lastReset: Date.now() },
+  myntra: { requests: 0, lastReset: Date.now() }
+};
+
+const MAX_REQUESTS_PER_MINUTE = 30;
+const RATE_LIMIT_WINDOW = 60000; // 1 minute
+
+// Helper to check and update rate limits
+function checkRateLimit(platform) {
+  const now = Date.now();
+  if (now - rateLimits[platform].lastReset >= RATE_LIMIT_WINDOW) {
+    rateLimits[platform].requests = 0;
+    rateLimits[platform].lastReset = now;
+  }
+  
+  if (rateLimits[platform].requests >= MAX_REQUESTS_PER_MINUTE) {
+    const waitTime = RATE_LIMIT_WINDOW - (now - rateLimits[platform].lastReset);
+    throw new Error(`Rate limit exceeded for ${platform}. Please wait ${Math.ceil(waitTime/1000)} seconds.`);
+  }
+  
+  rateLimits[platform].requests++;
+}
+
+// Retry configuration
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 2000; // 2 seconds
+
+// Helper for retrying operations
+async function withRetry(operation, platform, maxRetries = MAX_RETRIES) {
+  let lastError;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      checkRateLimit(platform);
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      logger.warn(`Attempt ${attempt} failed for ${platform}: ${error.message}`);
+      
+      if (error.message.includes('Rate limit exceeded')) {
+        const waitTime = RATE_LIMIT_WINDOW - (Date.now() - rateLimits[platform].lastReset);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+        continue;
+      }
+      
+      if (attempt < maxRetries) {
+        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY * attempt));
+      }
+    }
+  }
+  
+  throw new Error(`Failed after ${maxRetries} attempts: ${lastError.message}`);
+}
 
 /**
  * Detects the e-commerce platform from a given URL.
@@ -29,11 +88,7 @@ function detectPlatform(urlString) {
 }
 
 /**
- * Scrapes product data from a given URL.
- * This function primarily extracts data from the provided URL.
- * @param {string} url - The product URL.
- * @returns {Promise<object>} - Product data including platform and URL.
- * @throws {Error} - If URL is invalid, platform unsupported, or scraping fails.
+ * Scrapes product data from a given URL with retries and rate limiting.
  */
 async function scrapeProductData(url) {
   if (!url) {
@@ -45,8 +100,10 @@ async function scrapeProductData(url) {
     throw new Error('Unsupported or invalid URL. Please provide a valid Amazon, Flipkart, or Myntra product URL.');
   }
 
+  return withRetry(async () => {
   let data;
-  console.log(`Attempting to scrape ${platform} URL: ${url}`);
+    logger.info(`Attempting to scrape ${platform} URL: ${url}`);
+    
   try {
     switch (platform) {
       case 'amazon':
@@ -59,36 +116,29 @@ async function scrapeProductData(url) {
         data = await scrapeMyntra(url);
         break;
       default:
-        // This case should ideally not be reached due to the 'unknown' check above.
         throw new Error(`Internal error: Platform detection yielded '${platform}', which is not handled in scrape switch.`);
     }
 
-    if (!data || (!data.title && !data.brand)) { // Check if essential data is missing
+      if (!data || (!data.title && !data.brand)) {
       throw new Error(`Failed to extract essential product data (title/brand) from ${platform}. The page structure might have changed, or the product is unavailable.`);
     }
 
     data.platform = platform;
     data.url = url;
-    data.scraped_at = new Date().toISOString(); // Add timestamp
+      data.scraped_at = new Date().toISOString();
 
-    console.log(`Successfully scraped data from ${platform} for: ${data.title || 'Unknown Title'}`);
+      logger.info(`Successfully scraped data from ${platform} for: ${data.title || 'Unknown Title'}`);
     return data;
 
   } catch (error) {
-    console.error(`Error during scrapeProductData for ${platform} URL (${url}): ${error.message}`);
-    // Construct a more informative error message to bubble up
-    const specificError = error.message.startsWith('Failed to scrape') || error.message.startsWith('Could not extract') || error.message.includes('robot check') || error.message.includes('CAPTHCA');
-    if (specificError) {
-        throw error; // Re-throw specific, informative errors from scrapers
+      logger.error(`Error during scrapeProductData for ${platform} URL (${url}): ${error.message}`);
+      throw error;
     }
-    throw new Error(`Failed to scrape ${platform} due to: ${error.message}. Check logs for details.`);
-  }
+  }, platform);
 }
 
 /**
  * Main function to get product data from a URL and then find similar products on other platforms.
- * @param {string} initialUrl - The URL of the product to start with.
- * @returns {Promise<object>} - Structured comparison data.
  */
 async function getComparisonData(initialUrl) {
   if (!initialUrl) {
@@ -100,27 +150,23 @@ async function getComparisonData(initialUrl) {
     throw new Error('Invalid or unsupported URL for comparison. Must be Amazon, Flipkart, or Myntra.');
   }
 
-  console.log(`Starting comparison for URL: ${initialUrl} (Platform: ${sourcePlatform})`);
+  logger.info(`Starting comparison for URL: ${initialUrl} (Platform: ${sourcePlatform})`);
+  
   const sourceProductData = await scrapeProductData(initialUrl);
 
   if (!sourceProductData || !sourceProductData.title) {
     throw new Error(`Could not retrieve source product data from ${initialUrl}. Cannot proceed with comparison.`);
   }
   
-  console.log(`Source product: ${sourceProductData.title}`);
+  logger.info(`Source product: ${sourceProductData.title}`);
 
-  // Generate a search query based on the source product's details
   const searchQuery = generateSearchQuery({
     title: sourceProductData.title,
     brand: sourceProductData.brand,
-    // model: sourceProductData.model // if you add model to your scraped data
   });
-  console.log(`Generated search query: "${searchQuery}"`);
 
   if (!searchQuery) {
-      console.warn("Generated search query is empty. Comparison might be ineffective.");
-      // Fallback: use only title if query is empty
-      // searchQuery = sourceProductData.title; 
+    logger.warn("Generated search query is empty. Comparison might be ineffective.");
   }
 
   const matches = {
@@ -132,7 +178,7 @@ async function getComparisonData(initialUrl) {
   // Set the source product data directly for its platform
   matches[sourcePlatform] = {
       title: sourceProductData.title,
-      price: sourceProductData.price, // Assuming price is already cleaned or will be by formatPrice
+    price: sourceProductData.price,
       link: sourceProductData.url,
       image: sourceProductData.image,
       brand: sourceProductData.brand,
@@ -144,66 +190,49 @@ async function getComparisonData(initialUrl) {
   const platformsToSearch = ['amazon', 'flipkart', 'myntra'].filter(p => p !== sourcePlatform);
 
   for (const platform of platformsToSearch) {
-    if (!searchQuery) { // Skip search if query is empty
-        console.log(`Skipping search on ${platform} due to empty search query.`);
+    if (!searchQuery) {
+      logger.info(`Skipping search on ${platform} due to empty search query.`);
         continue;
     }
-    console.log(`Searching on ${platform} for: "${searchQuery}"`);
-    let searchResult = null;
+    
     try {
+      logger.info(`Searching on ${platform} for: "${searchQuery}"`);
+      let searchResult = null;
+      
+      searchResult = await withRetry(async () => {
       switch (platform) {
         case 'amazon':
-          searchResult = await searchAmazon(searchQuery);
-          break;
+            return await searchAmazon(searchQuery);
         case 'flipkart':
-          searchResult = await searchFlipkart(searchQuery);
-          break;
+            return await searchFlipkart(searchQuery);
         case 'myntra':
-          searchResult = await searchMyntra(searchQuery);
-          break;
+            return await searchMyntra(searchQuery);
       }
+      }, platform);
 
       if (searchResult && searchResult.link) {
-        console.log(`Found potential match on ${platform}: ${searchResult.title}. Fetching full details...`);
-        // To get full details, scrape the product page from the search result link
-        // Be mindful of rate limits and potential for getting blocked if you do this too aggressively.
-        // For now, we will use the search result directly, which has limited info.
-        // If you need more details, you'd call scrapeProductData(searchResult.link) here.
-        // const detailedMatch = await scrapeProductData(searchResult.link);
-        // matches[platform] = detailedMatch;
-        
-        // Using search result directly for now:
+        logger.info(`Found potential match on ${platform}: ${searchResult.title}. Fetching full details...`);
         matches[platform] = {
             title: searchResult.title,
             price: searchResult.price,
             link: searchResult.link,
             image: searchResult.image,
-            // brand, category, keyFeatures would be missing or N/A if just from search
         };
-        console.log(`Match on ${platform}: Title: ${searchResult.title}, Price: ${searchResult.price}`);
-
+        logger.info(`Match on ${platform}: Title: ${searchResult.title}, Price: ${searchResult.price}`);
       } else {
-        console.log(`No direct match found on ${platform} for "${searchQuery}".`);
+        logger.info(`No direct match found on ${platform} for "${searchQuery}".`);
       }
-    } catch (searchError) {
-        console.error(`Error searching on ${platform}: ${searchError.message}`);
-        matches[platform] = null; // Ensure it's null if search fails
+    } catch (error) {
+      logger.error(`Error searching on ${platform}: ${error.message}`);
+      // Continue with other platforms even if one fails
     }
-    // Add a small delay between searches to be less aggressive
-    await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 1000));
   }
-  
-  // Optionally, use findBestMatch if you have multiple candidates from search (not implemented in current search functions)
-  // For example, if search functions returned an array of results:
-  // if (amazonResults && amazonResults.length > 0) {
-  //   matches.amazon = findBestMatch(sourceProductData, amazonResults);
-  // }
 
-  return structureComparisonOutput({
-    productName: sourceProductData.title || 'Product',
-    sourcePlatform: sourcePlatform,
-    matches: matches,
-  });
+  return structureComparisonOutput(matches, sourceProductData);
 }
 
-module.exports = { scrapeProductData, detectPlatform, getComparisonData }; 
+module.exports = {
+  scrapeProductData,
+  getComparisonData,
+  detectPlatform
+}; 

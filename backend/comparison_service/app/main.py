@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from typing import List, Optional
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, HttpUrl
+from typing import List, Optional, Dict, Any
 import httpx
 from bs4 import BeautifulSoup
 from rapidfuzz import fuzz
@@ -27,6 +28,16 @@ import random
 from urllib.robotparser import RobotFileParser
 from urllib.parse import urlparse
 import time
+import logging
+import json
+from difflib import SequenceMatcher
+import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="Product Comparison Service",
@@ -34,32 +45,39 @@ app = FastAPI(
     version="1.0.0"
 )
 
-class ProductInfo(BaseModel):
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173", "http://127.0.0.1:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+class Product(BaseModel):
+    id: str
     title: str
+    price: float
+    currency: str
     platform: str
-    price: str
-    url: str
-    category: Optional[str] = None
+    url: HttpUrl
+    imageUrl: Optional[HttpUrl] = None
+    description: Optional[str] = None
     brand: Optional[str] = None
+    category: Optional[str] = None
+    features: Optional[Dict[str, Any]] = None
+    metadata: Optional[Dict[str, Any]] = None
+    createdAt: datetime
+    updatedAt: datetime
 
 class ComparisonRequest(BaseModel):
-    product: ProductInfo
-    platforms: List[str]
-
-class ComparisonProduct(BaseModel):
-    platform: str
-    title: str
-    price: str
-    match_score: float
-    product_url: str
-    image_url: Optional[str] = None
-    model_number: Optional[str] = None
-    brand: Optional[str] = None
+    products: List[Product]
+    searchQuery: Optional[str] = None
 
 class ComparisonResponse(BaseModel):
-    best_platform: str
-    products: List[ComparisonProduct]
-    timestamp: str
+    matches: List[Dict[str, Any]]
+    scores: Dict[str, float]
+    metadata: Dict[str, Any]
 
 # Cache for storing recent comparisons
 comparison_cache = {}
@@ -234,25 +252,22 @@ def extract_identifiers(title: str) -> dict:
         'brand': brand
     }
 
-async def search_platform(platform: str, query: str) -> List[ComparisonProduct]:
+async def search_platform(platform: str, query: str) -> List[Product]:
+    """Search for products on a specific platform."""
     try:
-        # Get search URL
         search_url = get_search_url(platform, query)
         if not search_url:
-            print(f"Invalid platform: {platform}")
+            logger.error(f"Invalid platform: {platform}")
             return []
 
-        # Fetch the page
-        html_content = await fetch_page(search_url)
-        if not html_content:
-            print(f"Failed to fetch content from {platform}")
-            return []
+        async with httpx.AsyncClient() as client:
+            response = await client.get(search_url, headers=DEFAULT_HEADERS, timeout=SCRAPING_TIMEOUT)
+            response.raise_for_status()
+            html_content = response.text
 
-        # Parse the page
         soup = BeautifulSoup(html_content, 'html.parser')
-        
-        # Platform-specific parsing
         products = []
+
         if platform.lower() == 'amazon':
             product_elements = soup.select('div[data-component-type="s-search-result"]')
             for element in product_elements[:MAX_PRODUCTS_PER_PLATFORM]:
@@ -260,26 +275,29 @@ async def search_platform(platform: str, query: str) -> List[ComparisonProduct]:
                     title_elem = element.select_one('h2 a span')
                     price_elem = element.select_one('span.a-price-whole')
                     url_elem = element.select_one('h2 a')
+                    image_elem = element.select_one('img.s-image')
                     
                     if not all([title_elem, price_elem, url_elem]):
                         continue
                         
                     title = title_elem.text.strip()
-                    price = f"₹{price_elem.text.strip()}"
+                    price = float(price_elem.text.strip().replace(',', ''))
                     url = f"https://www.amazon.in{url_elem['href']}"
+                    image_url = image_elem['src'] if image_elem else None
                     
-                    # Calculate match score
-                    match_score = fuzz.token_sort_ratio(query.lower(), title.lower())
-                    
-                    products.append(ComparisonProduct(
-                        platform=platform,
+                    products.append(Product(
+                        id=f"amazon-{len(products)}",
                         title=title,
                         price=price,
-                        match_score=match_score,
-                        product_url=url
+                        currency="INR",
+                        platform="amazon",
+                        url=url,
+                        imageUrl=image_url,
+                        createdAt=datetime.utcnow(),
+                        updatedAt=datetime.utcnow()
                     ))
                 except Exception as e:
-                    print(f"Error parsing Amazon product: {str(e)}")
+                    logger.error(f"Error parsing Amazon product: {str(e)}")
                     continue
                     
         elif platform.lower() == 'flipkart':
@@ -289,26 +307,29 @@ async def search_platform(platform: str, query: str) -> List[ComparisonProduct]:
                     title_elem = element.select_one('div._4rR01T')
                     price_elem = element.select_one('div._30jeq3')
                     url_elem = element.select_one('a._1fQZEK')
+                    image_elem = element.select_one('img._396cs4')
                     
                     if not all([title_elem, price_elem, url_elem]):
                         continue
                         
                     title = title_elem.text.strip()
-                    price = price_elem.text.strip()
+                    price = float(price_elem.text.strip().replace('₹', '').replace(',', ''))
                     url = f"https://www.flipkart.com{url_elem['href']}"
+                    image_url = image_elem['src'] if image_elem else None
                     
-                    # Calculate match score
-                    match_score = fuzz.token_sort_ratio(query.lower(), title.lower())
-                    
-                    products.append(ComparisonProduct(
-                        platform=platform,
+                    products.append(Product(
+                        id=f"flipkart-{len(products)}",
                         title=title,
                         price=price,
-                        match_score=match_score,
-                        product_url=url
+                        currency="INR",
+                        platform="flipkart",
+                        url=url,
+                        imageUrl=image_url,
+                        createdAt=datetime.utcnow(),
+                        updatedAt=datetime.utcnow()
                     ))
                 except Exception as e:
-                    print(f"Error parsing Flipkart product: {str(e)}")
+                    logger.error(f"Error parsing Flipkart product: {str(e)}")
                     continue
                     
         elif platform.lower() == 'myntra':
@@ -318,119 +339,201 @@ async def search_platform(platform: str, query: str) -> List[ComparisonProduct]:
                     title_elem = element.select_one('h3.product-brand')
                     price_elem = element.select_one('span.product-discountedPrice')
                     url_elem = element.select_one('a.product-base-link')
+                    image_elem = element.select_one('img.product-image')
                     
                     if not all([title_elem, price_elem, url_elem]):
                         continue
                         
                     title = title_elem.text.strip()
-                    price = price_elem.text.strip()
+                    price = float(price_elem.text.strip().replace('₹', '').replace(',', ''))
                     url = f"https://www.myntra.com{url_elem['href']}"
+                    image_url = image_elem['src'] if image_elem else None
                     
-                    # Calculate match score
-                    match_score = fuzz.token_sort_ratio(query.lower(), title.lower())
-                    
-                    products.append(ComparisonProduct(
-                        platform=platform,
+                    products.append(Product(
+                        id=f"myntra-{len(products)}",
                         title=title,
                         price=price,
-                        match_score=match_score,
-                        product_url=url
+                        currency="INR",
+                        platform="myntra",
+                        url=url,
+                        imageUrl=image_url,
+                        createdAt=datetime.utcnow(),
+                        updatedAt=datetime.utcnow()
                     ))
                 except Exception as e:
-                    print(f"Error parsing Myntra product: {str(e)}")
+                    logger.error(f"Error parsing Myntra product: {str(e)}")
                     continue
 
-        # Filter products by match score
-        filtered_products = [p for p in products if p.match_score >= MIN_MATCH_SCORE]
-        
-        # Sort by price
-        filtered_products.sort(key=lambda x: extract_price(x.price)['amount'])
-        
-        return filtered_products
+        return products
 
     except Exception as e:
-        print(f"Error in search_platform for {platform}: {str(e)}")
+        logger.error(f"Error in search_platform for {platform}: {str(e)}")
         return []
+
+def preprocess_text(text: str) -> str:
+    """Clean and normalize text for comparison."""
+    if not text:
+        return ""
+    # Convert to lowercase
+    text = text.lower()
+    # Remove special characters and extra spaces
+    text = re.sub(r'[^\w\s]', ' ', text)
+    text = re.sub(r'\s+', ' ', text)
+    return text.strip()
+
+def calculate_title_similarity(title1: str, title2: str) -> float:
+    """Calculate similarity between two product titles."""
+    title1 = preprocess_text(title1)
+    title2 = preprocess_text(title2)
+    
+    # Use TF-IDF and cosine similarity for better matching
+    vectorizer = TfidfVectorizer()
+    try:
+        tfidf_matrix = vectorizer.fit_transform([title1, title2])
+        similarity = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0]
+    except:
+        # Fallback to sequence matcher if TF-IDF fails
+        similarity = SequenceMatcher(None, title1, title2).ratio()
+    
+    return float(similarity)
+
+def calculate_price_similarity(price1: float, price2: float) -> float:
+    """Calculate similarity between two prices."""
+    if price1 <= 0 or price2 <= 0:
+        return 0.0
+    
+    # Calculate price difference as a percentage
+    max_price = max(price1, price2)
+    price_diff = abs(price1 - price2) / max_price
+    
+    # Convert to similarity score (1 - difference)
+    return 1.0 - price_diff
+
+def calculate_feature_similarity(features1: Dict, features2: Dict) -> float:
+    """Calculate similarity between product features."""
+    if not features1 or not features2:
+        return 0.0
+    
+    # Combine all feature text
+    text1 = " ".join(str(v) for v in features1.values())
+    text2 = " ".join(str(v) for v in features2.values())
+    
+    # Use TF-IDF and cosine similarity
+    vectorizer = TfidfVectorizer()
+    try:
+        tfidf_matrix = vectorizer.fit_transform([text1, text2])
+        similarity = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0]
+    except:
+        similarity = 0.0
+    
+    return float(similarity)
+
+def calculate_overall_similarity(product1: Product, product2: Product) -> float:
+    """Calculate overall similarity between two products."""
+    # Weights for different components
+    weights = {
+        'title': 0.4,
+        'price': 0.3,
+        'features': 0.2,
+        'category': 0.1
+    }
+    
+    # Calculate individual similarities
+    title_sim = calculate_title_similarity(product1.title, product2.title)
+    price_sim = calculate_price_similarity(product1.price, product2.price)
+    feature_sim = calculate_feature_similarity(product1.features or {}, product2.features or {})
+    category_sim = 1.0 if product1.category == product2.category else 0.0
+    
+    # Calculate weighted average
+    overall_sim = (
+        weights['title'] * title_sim +
+        weights['price'] * price_sim +
+        weights['features'] * feature_sim +
+        weights['category'] * category_sim
+    )
+    
+    return float(overall_sim)
 
 @app.post("/compare", response_model=ComparisonResponse)
 async def compare_products(request: ComparisonRequest):
+    """Compare products and find matches."""
     try:
-        # Validate platforms
-        invalid_platforms = [p for p in request.platforms if p.lower() not in SUPPORTED_PLATFORMS]
-        if invalid_platforms:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Unsupported platforms: {', '.join(invalid_platforms)}"
-            )
+        products = request.products
+        search_query = request.searchQuery
 
-        # Create cache key
-        cache_key = f"{request.product.title}_{','.join(sorted(request.platforms))}"
+        # If only one product is provided, search for similar products on other platforms
+        if len(products) == 1:
+            source_product = products[0]
+            all_products = [source_product]
+            
+            # Search on other platforms
+            other_platforms = [p for p in SUPPORTED_PLATFORMS if p != source_product.platform]
+            for platform in other_platforms:
+                try:
+                    platform_products = await search_platform(platform, search_query or source_product.title)
+                    if platform_products:
+                        # Find the best match
+                        best_match = max(platform_products, key=lambda p: calculate_overall_similarity(source_product, p))
+                        all_products.append(best_match)
+                except Exception as e:
+                    logger.error(f"Error searching on {platform}: {str(e)}")
+                    continue
+            
+            products = all_products
+
+        if len(products) < 2:
+            raise HTTPException(status_code=400, detail="Could not find enough similar products for comparison")
         
-        # Check cache
-        if cache_key in comparison_cache:
-            cache_entry = comparison_cache[cache_key]
-            if datetime.now() - cache_entry['timestamp'] < CACHE_DURATION:
-                return cache_entry['response']
-
-        # Search all platforms concurrently
-        search_tasks = [
-            search_platform(platform, request.product.title)
-            for platform in request.platforms
-        ]
+        # Calculate similarity matrix
+        n = len(products)
+        similarity_matrix = np.zeros((n, n))
+        for i in range(n):
+            for j in range(i + 1, n):
+                similarity = calculate_overall_similarity(products[i], products[j])
+                similarity_matrix[i][j] = similarity
+                similarity_matrix[j][i] = similarity
         
-        results = await asyncio.gather(*search_tasks, return_exceptions=True)
+        # Find matches (products with similarity > 0.7)
+        matches = []
+        for i in range(n):
+            for j in range(i + 1, n):
+                if similarity_matrix[i][j] > 0.7:
+                    matches.append({
+                        "product1": products[i].id,
+                        "product2": products[j].id,
+                        "similarity": float(similarity_matrix[i][j])
+                    })
         
-        # Process results and handle errors
-        all_products = []
-        for platform_result in results:
-            if isinstance(platform_result, Exception):
-                print(f"Error searching platform: {str(platform_result)}")
-                continue
-            all_products.extend(platform_result)
-
-        if not all_products:
-            raise HTTPException(
-                status_code=404,
-                detail="No matching products found on any platform"
-            )
-
-        # Find best match
-        best_product = min(all_products, key=lambda x: x.price)
+        # Calculate average similarity scores for each product
+        scores = {}
+        for i, product in enumerate(products):
+            avg_similarity = np.mean(similarity_matrix[i])
+            scores[product.id] = float(avg_similarity)
         
-        # Create response
-        response = ComparisonResponse(
-            best_platform=best_product.platform,
-            products=all_products,
-            timestamp=datetime.now().isoformat()
-        )
-
-        # Update cache
-        comparison_cache[cache_key] = {
-            'response': response,
-            'timestamp': datetime.now()
+        # Prepare metadata
+        metadata = {
+            "totalProducts": n,
+            "totalMatches": len(matches),
+            "averageSimilarity": float(np.mean(similarity_matrix)),
+            "timestamp": datetime.utcnow().isoformat()
         }
-
-        return response
-
-    except HTTPException as he:
-        raise he
-    except Exception as e:
-        print(f"Unexpected error in compare_products: {str(e)}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Failed to fetch comparison results: {str(e)}"
+        
+        return ComparisonResponse(
+            matches=matches,
+            scores=scores,
+            metadata=metadata
         )
+    
+    except Exception as e:
+        logger.error(f"Error in compare_products: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/health")
 async def health_check():
-    return {
-        "status": "healthy",
-        "timestamp": datetime.now().isoformat(),
-        "version": "1.0.0"
-    }
+    """Health check endpoint."""
+    return {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
 
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run(
         "app.main:app",
         host=SERVICE_HOST,
