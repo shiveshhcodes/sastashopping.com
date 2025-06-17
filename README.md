@@ -138,23 +138,10 @@ npm test
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👥 Team
-
-- [Your Name](https://github.com/yourusername) - Full Stack Developer
-
-## 🙏 Acknowledgments
-
-- Thanks to all contributors who have helped shape this project
-- Special thanks to the open-source community for their amazing tools and libraries
 
 ## 📞 Contact
 
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
-Project Link: [https://github.com/yourusername/sastashopping.com](https://github.com/yourusername/sastashopping.com)
+Project Link: [https://github.com/shiveshhcodes/sastashopping.com](https://github.com/yourusername/sastashopping.com)
 
 ---
 
