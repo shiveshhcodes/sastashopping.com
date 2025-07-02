@@ -22,6 +22,15 @@ const usePriceComparison = (initialUrl = '') => {
     setError(null);
     setResults(null);
 
+  
+    setTimeout(() => {
+      setError('There is a small error in our server. Please try again later.');
+      setLoading(false);
+    }, 1200);
+    return;
+
+    // The rest of the code is unreachable but kept for reference
+    /*
     try {
       // Validate URL before proceeding
       const validation = validateProductUrl(url);
@@ -75,6 +84,7 @@ const usePriceComparison = (initialUrl = '') => {
     } finally {
       setLoading(false);
     }
+    */
   };
 
   return {
