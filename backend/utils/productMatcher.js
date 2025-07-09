@@ -1,4 +1,3 @@
-const { scrapeAmazon } = require('./amazonScraper');
 const { scrapeFlipkart } = require('./flipkartScraper');
 const { scrapeMyntra } = require('./myntraScraper');
 
@@ -55,7 +54,9 @@ async function matchProductsAcrossPlatforms(sourceProduct, sourcePlatform) {
       let searchResults;
       switch (platform) {
         case 'amazon':
-          searchResults = await scrapeAmazon(searchQuery);
+          // If you need to scrape Amazon by URL, use the new scrapeAmazonProductByUrl from amazonScraper.js.
+          // For now, we'll keep the search-based approach for Amazon.
+          // searchResults = await scrapeAmazon(searchQuery); 
           break;
         case 'flipkart':
           searchResults = await scrapeFlipkart(searchQuery);

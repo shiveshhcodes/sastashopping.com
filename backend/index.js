@@ -16,6 +16,7 @@ const { validate } = require('./middlewares/validation');
 const { cache, checkCacheHealth } = require('./middlewares/cache');
 const { monitoring, metricsHandler } = require('./middlewares/monitoring');
 const routes = require('./routes');
+const { scrapeAmazonProductByUrl } = require('./utils/amazonScraper');
 
 // Load environment variables
 dotenv.config();
@@ -225,4 +226,16 @@ app.listen(PORT, () => {
     port: PORT,
     timestamp: new Date().toISOString()
   });
+});
+
+app.get('/api/compare/amazon', async (req, res) => {
+  const { url } = req.query;
+  if (!url) return res.status(400).json({ error: 'Missing URL' });
+  try {
+    const data = await scrapeAmazonProductByUrl(url);
+    if (!data) return res.status(500).json({ error: 'Scraping failed' });
+    res.json(data[0]); // Or return full array if needed
+  } catch (error) {
+    res.status(500).json({ error: error.message || 'Scraping failed' });
+  }
 });

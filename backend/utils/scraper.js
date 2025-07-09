@@ -1,7 +1,7 @@
 // Main scraper orchestrator
 // Note: The module paths assume these files are in the same directory.
 // Adjust if your file structure is different.
-const { scrapeAmazon, searchAmazon } = require('./amazonScraper');
+const { scrapeAmazonProductByUrl } = require('./amazonScraper');
 const { scrapeFlipkart, searchFlipkart } = require('./flipkartScraper');
 const { scrapeMyntra, searchMyntra } = require('./myntraScraper');
 const { generateSearchQuery, findBestMatch, structureComparisonOutput } = require('./helpers');
@@ -101,36 +101,38 @@ async function scrapeProductData(url) {
   }
 
   return withRetry(async () => {
-  let data;
+    let data;
     logger.info(`Attempting to scrape ${platform} URL: ${url}`);
-    
-  try {
-    switch (platform) {
-      case 'amazon':
-        data = await scrapeAmazon(url);
-        break;
-      case 'flipkart':
-        data = await scrapeFlipkart(url);
-        break;
-      case 'myntra':
-        data = await scrapeMyntra(url);
-        break;
-      default:
-        throw new Error(`Internal error: Platform detection yielded '${platform}', which is not handled in scrape switch.`);
-    }
+    try {
+      switch (platform) {
+        case 'amazon':
+          const amazonData = await scrapeAmazonProductByUrl(url);
+          if (!amazonData || !Array.isArray(amazonData) || amazonData.length === 0) {
+            throw new Error('No data returned from Apify Amazon Scraper.');
+          }
+          data = amazonData[0];
+          break;
+        case 'flipkart':
+          data = await scrapeFlipkart(url);
+          break;
+        case 'myntra':
+          data = await scrapeMyntra(url);
+          break;
+        default:
+          throw new Error(`Internal error: Platform detection yielded '${platform}', which is not handled in scrape switch.`);
+      }
 
       if (!data || (!data.title && !data.brand)) {
-      throw new Error(`Failed to extract essential product data (title/brand) from ${platform}. The page structure might have changed, or the product is unavailable.`);
-    }
+        throw new Error(`Failed to extract essential product data (title/brand) from ${platform}. The page structure might have changed, or the product is unavailable.`);
+      }
 
-    data.platform = platform;
-    data.url = url;
+      data.platform = platform;
+      data.url = url;
       data.scraped_at = new Date().toISOString();
 
       logger.info(`Successfully scraped data from ${platform} for: ${data.title || 'Unknown Title'}`);
-    return data;
-
-  } catch (error) {
+      return data;
+    } catch (error) {
       logger.error(`Error during scrapeProductData for ${platform} URL (${url}): ${error.message}`);
       throw error;
     }
