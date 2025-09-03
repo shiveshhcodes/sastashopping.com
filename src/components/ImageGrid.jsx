@@ -3,7 +3,6 @@ import styles from './ImageGrid.module.css'; // Import CSS Module
 
 // ImageGrid component: Displays the grid of placeholder images.
 function ImageGrid({ images = [] }) {
-  // Function to shuffle array using Fisher-Yates algorithm
   const shuffleArray = (array) => {
     const shuffled = [...array];
     for (let i = shuffled.length - 1; i > 0; i--) {

@@ -1,4 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+
+const SORRY_MOCK_RESULTS = [
+  {
+    title: "Sorry, couldn't fetch data",
+    price: '-',
+    link: 'https://www.amazon.in/',
+    source: 'amazon',
+    thumbnail: ''
+  },
+  {
+    title: "Sorry, couldn't fetch data",
+    price: '-',
+    link: 'https://www.flipkart.com/',
+    source: 'flipkart',
+    thumbnail: ''
+  },
+  {
+    title: "Sorry, couldn't fetch data",
+    price: '-',
+    link: 'https://www.myntra.com/',
+    source: 'myntra',
+    thumbnail: ''
+  }
+];
 
 const usePriceComparison = (initialUrl = '') => {
   const [productUrl, setProductUrl] = useState(initialUrl);
@@ -22,15 +46,6 @@ const usePriceComparison = (initialUrl = '') => {
     setError(null);
     setResults(null);
 
-  
-    setTimeout(() => {
-      setError('There is a small error in our server. Please try again later.');
-      setLoading(false);
-    }, 1200);
-    return;
-
-    // The rest of the code is unreachable but kept for reference
-    /*
     try {
       // Validate URL before proceeding
       const validation = validateProductUrl(url);
@@ -40,51 +55,43 @@ const usePriceComparison = (initialUrl = '') => {
         return;
       }
 
-      // First, get the product details from the URL
-      const productResponse = await fetch('http://localhost:5050/api/v1/products', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify({ url })
-      });
-
-      if (!productResponse.ok) {
-        const errData = await productResponse.json();
-        throw new Error(errData.error || 'Failed to fetch product details');
+      // Set up a 13 second timeout for the fetch
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 13000);
+      let data;
+      try {
+        const response = await fetch('http://localhost:5050/api/compare-product', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ url }),
+          signal: controller.signal
+        });
+        clearTimeout(timeout);
+        data = await response.json();
+        if (!response.ok) {
+          setError(data.error || 'Failed to fetch comparison results.');
+          setResults(SORRY_MOCK_RESULTS);
+          setLoading(false);
+          return;
+        }
+      } catch (err) {
+        clearTimeout(timeout);
+        setError('Sorry, couldn\'t fetch data, please try again.');
+        setResults(SORRY_MOCK_RESULTS);
+        setLoading(false);
+        return;
       }
-
-      const productData = await productResponse.json();
-      
-      // Now send the product data to the comparison service
-      const response = await fetch('http://localhost:5050/api/v1/compare', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          products: [productData],
-          searchQuery: productData.title
-        })
-      });
-
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.error || 'Failed to fetch comparison results');
-      }
-
-      const data = await response.json();
-      setResults(data);
+      setResults(data.results || SORRY_MOCK_RESULTS);
+      setError(null);
     } catch (err) {
-      setError(err.message || 'Failed to compare prices. Please try again.');
+      setError('Sorry, couldn\'t fetch data, please try again.');
+      setResults(SORRY_MOCK_RESULTS);
     } finally {
       setLoading(false);
     }
-    */
   };
 
   return {

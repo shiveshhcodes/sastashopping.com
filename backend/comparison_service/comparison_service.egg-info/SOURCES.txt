@@ -1,8 +1,0 @@
-README.md
-setup.py
-comparison_service.egg-info/PKG-INFO
-comparison_service.egg-info/SOURCES.txt
-comparison_service.egg-info/dependency_links.txt
-comparison_service.egg-info/requires.txt
-comparison_service.egg-info/top_level.txt
-tests/test_main.py

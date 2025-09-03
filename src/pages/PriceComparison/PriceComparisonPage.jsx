@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PriceComparisonHeader from './components/PriceComparisonHeader';
 import PriceComparisonFilters from './components/PriceComparisonFilters';
-import PriceComparisonResults from './components/PriceComparisonResults';
+import ComparisonResults from './components/ComparisonResults';
 import usePriceComparison from './hooks/usePriceComparison';
 import './styles/PriceComparisonStyles.css';
 
@@ -35,8 +35,8 @@ function PriceComparisonPage() {
 
         <PriceComparisonFilters />
 
-        <PriceComparisonResults
-          results={results}
+        <ComparisonResults
+          results={results || []}
           loading={loading}
           error={error}
         />
