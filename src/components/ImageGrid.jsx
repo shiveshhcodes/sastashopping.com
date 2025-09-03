@@ -12,7 +12,7 @@ function ImageGrid({ images = [] }) {
     return shuffled;
   };
 
-  // Memoize the shuffled and split arrays to prevent unnecessary re-renders
+ 
   const { topTrackImages, bottomTrackImages } = useMemo(() => {
     // Create a larger pool of images by repeating the array
     const expandedImages = Array(3).fill(images).flat();
